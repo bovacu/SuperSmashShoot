@@ -16,14 +16,14 @@ public class ServerListener extends Thread {
     private DataOutputStream output;
     private boolean stop;
 
-    private final String COMMANDS[] = {"PARTY REQUEST SENT"};
+    private final String COMMANDS[] = {"PARTY REQUEST SENT", "CLOSE OK"};
 
     public ServerListener(){
         super.setDaemon(true);
         this.stop = false;
 
         try {
-            this.socket = new Socket("localhost", SuperSmashShoot.PORT);
+            this.socket = new Socket("192.168.1.35", SuperSmashShoot.PORT);
             this.input = new DataInputStream(this.socket.getInputStream());
             this.output = new DataOutputStream(this.socket.getOutputStream());
         } catch (IOException e) {
@@ -44,6 +44,8 @@ public class ServerListener extends Thread {
                     List<String> toSend = new ArrayList<>();
                     toSend.add("FRIEND LIST");
                     SuperSmashShoot.serverSpeaker.setToSend(toSend);
+                }else if(this.COMMANDS[1].equals(request)){
+                    break;
                 }
 
             }catch (IOException e){
@@ -55,6 +57,14 @@ public class ServerListener extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+
+        try {
+            this.input.close();
+            this.output.close();
+            this.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

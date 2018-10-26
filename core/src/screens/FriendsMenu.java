@@ -120,7 +120,6 @@ public class FriendsMenu extends InputAdapter implements Screen {
             public void buttonAction() {
                 List<String> toSend = new ArrayList<>();
                 toSend.add("SEND PARTY REQUEST");
-                System.out.println(pl_friendsList.getSelectedItem());
                 toSend.add(pl_friendsList.getSelectedItem());
 
                 SuperSmashShoot.serverSpeaker.setToSend(toSend);

@@ -32,7 +32,7 @@ public class ServerSpeaker extends Thread {
         this.stop = false;
 
         try {
-            this.socket = new Socket("localhost", SuperSmashShoot.PORT);
+            this.socket = new Socket("192.168.1.35", SuperSmashShoot.PORT);
             this.input = new DataInputStream(this.socket.getInputStream());
             this.output = new DataOutputStream(this.socket.getOutputStream());
         } catch (IOException e) {
