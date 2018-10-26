@@ -37,11 +37,16 @@ public class FriendsMenu extends InputAdapter implements Screen {
 
     private SpriteButton sb_back;
 
+    private final float UPDATE_LIST_TIME = 2f;
+    private float timePassed;
+
     public FriendsMenu(SuperSmashShoot game){
         this.game = game;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT);
         this.viewport = new FitViewport(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT, this.camera);
+
+        this.timePassed = 0;
 
         this.createBlock1();
         this.createBlock2();
@@ -74,9 +79,9 @@ public class FriendsMenu extends InputAdapter implements Screen {
         this.sb_addFriend = new SpriteButton(IDs.PLUS_BUTTON, IDs.PLUS_BUTTON_DOWN) {
             @Override
             public void action() {
-                if(DataManager.connected)
-                    sendFriendRequest();
-                else {
+                if(DataManager.connected) {
+
+                } else {
                     SuperSmashShoot.ms_message.update("You need to connect first!");
                     System.out.println("entra aqui");
                 }
@@ -113,7 +118,12 @@ public class FriendsMenu extends InputAdapter implements Screen {
                 IDs.PAGED_LIST_BACK, IDs.NEXT, IDs.NEXT_DOWN, IDs.PREVIOUS, IDs.PREVIOUS_DOWN) {
             @Override
             public void buttonAction() {
+                List<String> toSend = new ArrayList<>();
+                toSend.add("SEND PARTY REQUEST");
+                System.out.println(pl_friendsList.getSelectedItem());
+                toSend.add(pl_friendsList.getSelectedItem());
 
+                SuperSmashShoot.serverSpeaker.setToSend(toSend);
             }
         };
 
@@ -155,105 +165,9 @@ public class FriendsMenu extends InputAdapter implements Screen {
                 IDs.PAGED_LIST_BACK, IDs.NEXT, IDs.NEXT_DOWN, IDs.PREVIOUS, IDs.PREVIOUS_DOWN) {
             @Override
             public void buttonAction() {
-                sendPartyRequest();
+                //sendPartyRequest();
             }
         };
-    }
-
-    private void sendPartyRequest(){
-        try {
-            Socket s = new Socket("localhost", SuperSmashShoot.PORT);
-            DataOutputStream os = new DataOutputStream(s.getOutputStream());
-
-            os.writeBytes("PARTY" + "\r\n");
-            os.writeBytes(DataManager.userName + "\r\n");
-            os.writeBytes(this.pl_partyRequests.getSelectedItem() + "\r\n");
-            os.flush();
-            DataInputStream is = new DataInputStream(s.getInputStream());
-
-            os.close();
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-//    private List<String> friendrequests(){
-//        List<String> requests = new ArrayList<>();
-//
-//        try {
-//            Socket s = new Socket("localhost", SuperSmashShoot.PORT);
-//            DataOutputStream os = new DataOutputStream(s.getOutputStream());
-//            os.writeBytes("REQUESTS" + "\r\n");
-//            os.writeBytes(DataManager.userName + "\r\n");
-//            os.flush();
-//            DataInputStream is = new DataInputStream(s.getInputStream());
-//
-//            String response;
-//
-//            while((response = is.readLine()) != null)
-//                requests.add(response);
-//
-//            os.close();
-//            is.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return requests;
-//    }
-
-    private List<String> friendsList(){
-        List<String> friends = new ArrayList<>();
-
-        try {
-            Socket s = new Socket("localhost", SuperSmashShoot.PORT);
-            DataOutputStream os = new DataOutputStream(s.getOutputStream());
-            os.writeBytes("FRIENDS" + "\r\n");
-            os.writeBytes(DataManager.userName + "\r\n");
-            os.flush();
-            DataInputStream is = new DataInputStream(s.getInputStream());
-
-            String response;
-
-            while((response = is.readLine()) != null)
-                friends.add(response);
-
-            os.close();
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return friends;
-    }
-
-    private void sendFriendRequest(){
-        try {
-            Socket s = new Socket("localhost", SuperSmashShoot.PORT);
-            DataOutputStream os = new DataOutputStream(s.getOutputStream());
-            os.writeBytes("ADD FRIEND" + "\r\n");
-            os.writeBytes(DataManager.userName + "\r\n");
-            os.writeBytes(this.tb_addFriend.getInfo() + "\r\n");
-            os.flush();
-            DataInputStream is = new DataInputStream(s.getInputStream());
-
-            String response = is.readLine();
-
-            if(response.equals("OK")){
-                SuperSmashShoot.ms_message.update("Friend request sent!");
-            }else if(response.equals("NO PLAYER")){
-                SuperSmashShoot.ms_message.update("No player found :(");
-            }else if(response.equals("ALREADY FRIEND")){
-                SuperSmashShoot.ms_message.update("Request already sent");
-            }
-
-            os.close();
-            is.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -263,6 +177,30 @@ public class FriendsMenu extends InputAdapter implements Screen {
 
     @Override
     public void render(float delta) {
+
+        if(this.timePassed > this.UPDATE_LIST_TIME){
+            List<String> friends = SuperSmashShoot.serverSpeaker.getFriendsList();
+            for(String s : this.pl_friendsList.getItems()) {
+                if (!friends.contains(s))
+                    this.pl_friendsList.addItem(s);
+            }
+
+            List<String> request = SuperSmashShoot.serverSpeaker.getRequestsList();
+            for(String s : this.pl_friendRequests.getItems()) {
+                if (!request.contains(s))
+                    this.pl_friendRequests.addItem(s);
+            }
+
+            List<String> party = SuperSmashShoot.serverSpeaker.getPartyList();
+            for(String s : this.pl_partyRequests.getItems()) {
+                if (!party.contains(s))
+                    this.pl_partyRequests.addItem(s);
+            }
+
+            this.timePassed = 0;
+        }else{
+            this.timePassed += delta;
+        }
 
         this.game.batch.setProjectionMatrix(this.camera.combined);
         this.game.debugger.setProjectionMatrix(this.camera.combined);

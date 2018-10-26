@@ -55,34 +55,46 @@ public class ServerSpeaker extends Thread {
         while(true){
             if(!this.toSend.get(0).equals("NAN") && this.socket.isConnected()){
                 try {
-                    if(this.toSend.get(0).equals("CONNECT")){
-                        this.output.writeBytes(this.toSend.get(0) + "\r\n");
-                        this.output.writeBytes(this.toSend.get(1) + "\r\n");
-                        this.output.writeBytes(this.toSend.get(2) + "\r\n");
-                        this.output.flush();
-                    }else if(this.toSend.get(0).equals("CLOSE")){
-                        this.output.writeBytes(this.toSend.get(0) + "\r\n");
-                        this.output.flush();
-                    }else if(this.toSend.get(0).equals("FRIEND LIST")){
-                        this.output.writeBytes(this.toSend.get(0) + "\r\n");
-                        this.output.flush();
-                    }else if(this.toSend.get(0).equals("REGISTER")){
-                        this.output.writeBytes(this.toSend.get(0) + "\r\n");
-                        this.output.writeBytes(this.toSend.get(1) + "\r\n");
-                        this.output.writeBytes(this.toSend.get(2) + "\r\n");
-                        this.output.flush();
-                    }else if(this.toSend.get(0).equals("FRIEND REQUEST")){
-                        this.output.writeBytes(this.toSend.get(0) + "\r\n");
-                        this.output.flush();
-                    }else if(this.toSend.get(0).equals("PARTY REQUEST")){
-                        this.output.writeBytes(this.toSend.get(0) + "\r\n");
-                        this.output.flush();
+                    switch (this.toSend.get(0)) {
+                        case "CONNECT":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(1) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(2) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "CLOSE":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "FRIEND LIST":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "REGISTER":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(1) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(2) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "FRIEND REQUEST":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "PARTY REQUEST":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "SEND PARTY REQUEST":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(1) + "\r\n");
+                            this.output.flush();
+                            break;
                     }
 
 
 
                     String response = this.input.readLine();
-                    System.out.println(response);
+                    System.out.println("SERVER_SPEAKER: " + response);
 
 
 
@@ -138,6 +150,7 @@ public class ServerSpeaker extends Thread {
                         }
 
                         else if(response.equals(this.RESPONSES[8])){
+                            this.requestsList = new ArrayList<>();
                             while(!(response = this.input.readLine()).equals("END"))
                                 this.requestsList.add(response);
                             List<String> toSend = new ArrayList<>();
@@ -146,6 +159,7 @@ public class ServerSpeaker extends Thread {
                         }
 
                         else if(response.equals(this.RESPONSES[9])){
+                            this.partyList = new ArrayList<>();
                             while(!(response = this.input.readLine()).equals("END"))
                                 this.partyList.add(response);
                             this.resetToSend();

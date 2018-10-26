@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import characters.ServerListener;
 import characters.ServerSpeaker;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -32,6 +33,7 @@ public class SuperSmashShoot extends Game {
 
     public static Message ms_message;
 	public static ServerSpeaker serverSpeaker;
+	public static ServerListener serverListener;
 	public static ExecutorService pool;
 	
 	@Override
@@ -42,9 +44,11 @@ public class SuperSmashShoot extends Game {
 		SuperSmashShoot.SCREEN_HEIGHT = 1080;
 		DataManager.loadData();
 		ms_message = new Message("", IDs.PAGED_LIST_BACK);
-		SuperSmashShoot.pool = Executors.newFixedThreadPool(1);
+		SuperSmashShoot.pool = Executors.newFixedThreadPool(2);
 		SuperSmashShoot.serverSpeaker = new ServerSpeaker();
+		SuperSmashShoot.serverListener = new ServerListener();
 		SuperSmashShoot.pool.execute(SuperSmashShoot.serverSpeaker);
+		SuperSmashShoot.pool.execute(SuperSmashShoot.serverListener);
 
         this.mainMenu = new MainMenu(this);
 		super.setScreen(this.mainMenu);

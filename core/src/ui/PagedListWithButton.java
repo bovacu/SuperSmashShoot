@@ -100,11 +100,19 @@ public abstract class PagedListWithButton extends Sprite implements Ui{
         return this.selectedItem;
     }
 
+    public List<String> getItems(){
+        return this.list;
+    }
+
     public void execute(int x, int y){
         if(this.next.isMouseOver(x, y))
             this.next.execute(x, y);
         if(this.previous.isMouseOver(x, y))
             this.previous.execute(x, y);
+        for(SpriteButton sb : this.sb_itemButtons)
+            if(sb != null)
+                if(sb.isMouseOver(x, y))
+                    sb.execute(x, y);
     }
 
     private int itemsToDraw(){
