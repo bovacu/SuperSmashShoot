@@ -114,7 +114,7 @@ public class MainMenu extends InputAdapter implements Screen {
             public void action() {
                 if(!DataManager.connected && loggin == null){
                     loggin = new Loggin(IDs.PAGED_LIST_BACK, new Vector2(sb_chat.getPosition().x, sb_chat.getPosition().y +
-                            sb_chat.getSizes().height * 1.5f), SuperSmashShoot.ms_message);
+                            sb_chat.getSizes().height * 1.5f));
                     InputMultiplexer im = new InputMultiplexer();
                     im.addProcessor(Gdx.input.getInputProcessor());
                     im.addProcessor(loggin);

@@ -1,6 +1,5 @@
 package ui;
 
-import characters.ServerSpeaker;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -8,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.SuperSmashShoot;
 import general.Converter;
-import general.DataManager;
 import general.IDs;
 
 import java.io.DataInputStream;
@@ -26,14 +24,12 @@ public class Loggin extends InputAdapter implements Ui {
     private SpriteButton sb_loggIn, sb_close, sb_register;
 
     private boolean closed;
-    private Message ms_message;
 
-    public Loggin(int id, Vector2 position, Message ms_message){
+    public Loggin(int id, Vector2 position){
         this.background = Converter.idToSprite(id);
         this.background.setSize(512, 512);
         this.background.setPosition(position.x, position.y);
         this.closed = false;
-        this.ms_message = ms_message;
         this.createBlock1();
         this.createBlock2();
         this.createBlock3();

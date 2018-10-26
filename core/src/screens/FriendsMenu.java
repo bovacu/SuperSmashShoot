@@ -118,8 +118,6 @@ public class FriendsMenu extends InputAdapter implements Screen {
         };
 
         if(DataManager.connected) {
-            List<String> toSend = new ArrayList<>();
-            toSend.add("FRIEND LIST");
             List<String> friends = SuperSmashShoot.serverSpeaker.getFriendsList();
             for(String friend : friends)
                 pl_friendsList.addItem(friend);
@@ -140,11 +138,11 @@ public class FriendsMenu extends InputAdapter implements Screen {
             }
         };
 
-//        if(DataManager.connected) {
-//            List<String> friends = this.friendrequests();
-//            for(String friend : friends)
-//                pl_friendRequests.addItem(friend);
-//        }
+        if(DataManager.connected) {
+            List<String> friendsRequest = SuperSmashShoot.serverSpeaker.getRequestsList();
+            for(String request : friendsRequest)
+                pl_friendRequests.addItem(request);
+        }
     }
 
     private void createBlock5(){
