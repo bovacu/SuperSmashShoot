@@ -9,25 +9,25 @@ import general.DataManager;
 import general.IDs;
 import maps.Map;
 import screens.MainMenu;
+import ui.Chat;
 import ui.Message;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
 public class SuperSmashShoot extends Game {
+	public static final String HOST_NAME = "supersmashshoot.ddns.net";
 
 	public SpriteBatch batch;
 	public ShapeRenderer debugger;
 	public static int SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT;
-	public static final int PORT = 6767;
+	public static final int PORT = 6868;
 	private Map map;
 	private MainMenu mainMenu;
 

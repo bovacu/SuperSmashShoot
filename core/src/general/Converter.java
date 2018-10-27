@@ -107,6 +107,8 @@ public class Converter {
             case IDs.JOIN_MATCH_DOWN :          return new Sprite(new Texture(UI + "joinMatchDown.png"));
             case IDs.REGISTER :                 return new Sprite(new Texture(UI + "register.png"));
             case IDs.REGISTER_DOWN :            return new Sprite(new Texture(UI + "registerDown.png"));
+            case IDs.SEND :                     return new Sprite(new Texture(UI + "send.png"));
+            case IDs.SEND_DOWN :                return new Sprite(new Texture(UI + "sendDown.png"));
             case IDs.GUN :                      return new Sprite(new Texture(SOLDIER + "gun.png"));
 
             case IDs.DEFAULT :                  return new Sprite();

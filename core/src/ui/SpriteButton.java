@@ -29,6 +29,12 @@ public abstract class SpriteButton extends Sprite implements Ui{
         return new Vector2(super.getX(), super.getY());
     }
 
+    public void setButtonSize(float width, float height){
+        super.setSize(width, height);
+        this.downButton.setSize(width, height);
+        this.toRender.setSize(width, height);
+    }
+
     public void setPosition(Vector2 position){
         super.setPosition(position.x, position.y);
         this.downButton.setPosition(super.getX(), super.getY());

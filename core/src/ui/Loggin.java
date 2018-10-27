@@ -1,5 +1,6 @@
 package ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -9,10 +10,6 @@ import com.mygdx.game.SuperSmashShoot;
 import general.Converter;
 import general.IDs;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +26,7 @@ public class Loggin extends InputAdapter implements Ui {
         this.background = Converter.idToSprite(id);
         this.background.setSize(512, 512);
         this.background.setPosition(position.x, position.y);
-        this.closed = false;
+        this.closed = true;
         this.createBlock1();
         this.createBlock2();
         this.createBlock3();
@@ -77,7 +74,6 @@ public class Loggin extends InputAdapter implements Ui {
         this.sb_close = new SpriteButton(IDs.QUIT, IDs.QUIT_DOWN) {
             @Override
             public void action() {
-                this.dispose();
                 closed = true;
             }
         };
@@ -107,16 +103,22 @@ public class Loggin extends InputAdapter implements Ui {
         return this.closed;
     }
 
+    public void setClosed(boolean closed){
+        this.closed = closed;
+    }
+
     @Override
     public void render(SpriteBatch batch, int x, int y) {
-        this.background.draw(batch);
-        this.lb_user.render(batch, x, y);
-        this.tb_user.render(batch, x, y);
-        this.lb_password.render(batch, x, y);
-        this.tb_password.render(batch, x, y);
-        this.sb_loggIn.render(batch, x, y);
-        this.sb_close.render(batch, x, y);
-        this.sb_register.render(batch, x, y);
+        if(!this.closed){
+            this.background.draw(batch);
+            this.lb_user.render(batch, x, y);
+            this.tb_user.render(batch, x, y);
+            this.lb_password.render(batch, x, y);
+            this.tb_password.render(batch, x, y);
+            this.sb_loggIn.render(batch, x, y);
+            this.sb_close.render(batch, x, y);
+            this.sb_register.render(batch, x, y);
+        }
     }
 
     @Override
@@ -142,19 +144,20 @@ public class Loggin extends InputAdapter implements Ui {
 
     @Override
     public boolean keyDown(int key){
-        if(key == Input.Keys.DEL || key == Input.Keys.ENTER || key == Input.Keys.CONTROL_LEFT || key == Input.Keys.CONTROL_RIGHT
-                || key == Input.Keys.SHIFT_LEFT || key == Input.Keys.SHIFT_RIGHT || key == Input.Keys.ESCAPE || key == Input.Keys.SPACE) {
-            this.tb_user.setCanGetLetter(false);
-            this.tb_password.setCanGetLetter(false);
+        if(!this.closed)
+            if(key == Input.Keys.DEL || key == Input.Keys.ENTER || key == Input.Keys.CONTROL_LEFT || key == Input.Keys.CONTROL_RIGHT
+                    || key == Input.Keys.SHIFT_LEFT || key == Input.Keys.SHIFT_RIGHT || key == Input.Keys.ESCAPE || key == Input.Keys.SPACE) {
+                this.tb_user.setCanGetLetter(false);
+                this.tb_password.setCanGetLetter(false);
 
-            if(key == (Input.Keys.DEL)) {
-                this.tb_user.removeLetter();
-                this.tb_password.removeLetter();
+                if(key == (Input.Keys.DEL)) {
+                    this.tb_user.removeLetter();
+                    this.tb_password.removeLetter();
+                }
+            } else {
+                this.tb_user.setCanGetLetter(true);
+                this.tb_password.setCanGetLetter(true);
             }
-        } else {
-            this.tb_user.setCanGetLetter(true);
-            this.tb_password.setCanGetLetter(true);
-        }
         return false;
     }
 
@@ -164,11 +167,13 @@ public class Loggin extends InputAdapter implements Ui {
      **/
     @Override
     public boolean keyTyped(char key){
-        if(this.tb_user.isCanGetLetter())
-            this.tb_user.addLetter(String.valueOf(key));
+        if(!this.closed) {
+            if (this.tb_user.isCanGetLetter())
+                this.tb_user.addLetter(String.valueOf(key));
 
-        if(this.tb_password.isCanGetLetter())
-            this.tb_password.addLetter(String.valueOf(key));
+            if (this.tb_password.isCanGetLetter())
+                this.tb_password.addLetter(String.valueOf(key));
+        }
         return false;
     }
 }

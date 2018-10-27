@@ -14,10 +14,7 @@ import com.mygdx.game.SuperSmashShoot;
 import general.DataManager;
 import general.IDs;
 import maps.Map;
-import ui.Loggin;
-import ui.Message;
-import ui.PartyList;
-import ui.SpriteButton;
+import ui.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +34,7 @@ public class MainMenu extends InputAdapter implements Screen {
     private PartyList pl_friendsInParty;
 
     private Loggin loggin;
+    private Chat chat;
 
     public MainMenu(SuperSmashShoot game){
         this.game = game;
@@ -48,7 +46,15 @@ public class MainMenu extends InputAdapter implements Screen {
         this.setButtonsPositions();
         this.constructPartyFriends();
 
-        Gdx.input.setInputProcessor(this);
+        this.chat = new Chat(this.sb_chat);
+        this.loggin = new Loggin(IDs.PAGED_LIST_BACK, new Vector2(sb_chat.getPosition().x, sb_chat.getPosition().y +
+                sb_chat.getSizes().height * 1.5f));
+
+        InputMultiplexer im = new InputMultiplexer();
+        im.addProcessor(this);
+        im.addProcessor(this.chat);
+        im.addProcessor(this.loggin);
+        Gdx.input.setInputProcessor(im);
     }
 
     private void constructButtons(){
@@ -74,7 +80,11 @@ public class MainMenu extends InputAdapter implements Screen {
         this.sb_chat = new SpriteButton(IDs.CHAT, IDs.CHAT_DOWN) {
             @Override
             public void action() {
-                loggin = null;
+                if(!chat.isVisible()){
+                    loggin.setClosed(true);
+                    chat.setVisible(true);
+                }else
+                    chat.setVisible(false);
             }
         };
 
@@ -112,13 +122,9 @@ public class MainMenu extends InputAdapter implements Screen {
         this.sb_connect = new SpriteButton(IDs.CONNECT, IDs.CONNECT_DOWN) {
             @Override
             public void action() {
-                if(!DataManager.connected && loggin == null){
-                    loggin = new Loggin(IDs.PAGED_LIST_BACK, new Vector2(sb_chat.getPosition().x, sb_chat.getPosition().y +
-                            sb_chat.getSizes().height * 1.5f));
-                    InputMultiplexer im = new InputMultiplexer();
-                    im.addProcessor(Gdx.input.getInputProcessor());
-                    im.addProcessor(loggin);
-                    Gdx.input.setInputProcessor(im);
+                if(!DataManager.connected && loggin.isClosed()){
+                    chat.setVisible(false);
+                    loggin.setClosed(false);
                 }else
                     SuperSmashShoot.ms_message.update("You are already connected");
             }
@@ -165,10 +171,6 @@ public class MainMenu extends InputAdapter implements Screen {
         this.game.batch.setProjectionMatrix(this.camera.combined);
         this.game.debugger.setProjectionMatrix(this.camera.combined);
 
-        if(this.loggin != null)
-            if(this.loggin.isClosed())
-                this.loggin = null;
-
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -185,8 +187,8 @@ public class MainMenu extends InputAdapter implements Screen {
         this.sb_connect.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         SuperSmashShoot.ms_message.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.pl_friendsInParty.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
-        if(this.loggin != null)
-            this.loggin.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
+        this.chat.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
+        this.loggin.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.game.batch.end();
     }
 
@@ -220,8 +222,8 @@ public class MainMenu extends InputAdapter implements Screen {
         this.sb_stats.dispose();
         this.sb_friends.dispose();
         this.sb_connect.dispose();
-        if(this.loggin != null)
-            this.loggin.dispose();
+        this.chat.dispose();
+        this.loggin.dispose();
         this.pl_friendsInParty.dispose();
     }
 
@@ -236,7 +238,9 @@ public class MainMenu extends InputAdapter implements Screen {
         this.sb_stats.execute((int)mousePos.x, (int)mousePos.y);
         this.sb_friends.execute((int)mousePos.x, (int)mousePos.y);
         this.sb_connect.execute((int)mousePos.x, (int)mousePos.y);
-        if(this.loggin != null)
+        if(this.chat.isVisible())
+            this.chat.execute((int)mousePos.x, (int)mousePos.y);
+        if(!this.loggin.isClosed())
             this.loggin.execute((int)mousePos.x, (int)mousePos.y);
         return false;
     }

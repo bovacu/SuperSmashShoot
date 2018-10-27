@@ -106,8 +106,10 @@ public class IDs {
     public static final int JOIN_MATCH_DOWN             = 157;
     public static final int REGISTER                    = 158;
     public static final int REGISTER_DOWN               = 159;
+    public static final int SEND                        = 160;
+    public static final int SEND_DOWN                   = 161;
 
-    public static final int GUN                         = 160;
+    public static final int GUN                         = 162;
 
     public static final int DEFAULT                     = 1000;
 

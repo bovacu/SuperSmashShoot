@@ -5,6 +5,7 @@ import com.mygdx.game.SuperSmashShoot;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class ServerListener extends Thread {
         this.stop = false;
 
         try {
-            this.socket = new Socket("192.168.1.35", SuperSmashShoot.PORT);
+            this.socket = new Socket("192.168.1.40", SuperSmashShoot.PORT);
             this.input = new DataInputStream(this.socket.getInputStream());
             this.output = new DataOutputStream(this.socket.getOutputStream());
         } catch (IOException e) {
