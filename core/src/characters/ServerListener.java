@@ -17,7 +17,7 @@ public class ServerListener extends Thread {
     private DataOutputStream output;
     private boolean stop;
 
-    private final String COMMANDS[] = {"PARTY REQUEST SENT", "CLOSE OK"};
+    private final String COMMANDS[] = {"PARTY REQUEST SENT", "CLOSE OK", "INVITATION RECEIVED", "UPDATE PARTY"};
 
     public ServerListener(){
         super.setDaemon(true);
@@ -42,11 +42,24 @@ public class ServerListener extends Thread {
                 if(this.COMMANDS[0].equals(request)){
                     String friend = this.input.readLine();
                     SuperSmashShoot.ms_message.update(friend + " has invited you to a party");
-                    List<String> toSend = new ArrayList<>();
-                    toSend.add("FRIEND LIST");
-                    SuperSmashShoot.serverSpeaker.setToSend(toSend);
-                }else if(this.COMMANDS[1].equals(request)){
+                    this.updateLists();
+                }
+
+                else if(this.COMMANDS[1].equals(request)){
                     break;
+                }
+
+                else if(this.COMMANDS[2].equals(request)){
+                    String host = this.input.readLine();
+                    SuperSmashShoot.ms_message.update(host + " has invited you to his party");
+                    this.updateLists();
+                }
+
+                else if(this.COMMANDS[3].equals(request)){
+                    String newPlayer = this.input.readLine();
+                    SuperSmashShoot.ms_message.update(newPlayer + " has joined the party");
+                    SuperSmashShoot.partyList.addItem(newPlayer);
+                    this.updateLists();
                 }
 
             }catch (IOException e){
@@ -67,5 +80,11 @@ public class ServerListener extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateLists(){
+        List<String> toSend = new ArrayList<>();
+        toSend.add("FRIEND LIST");
+        SuperSmashShoot.serverSpeaker.setToSend(toSend);
     }
 }

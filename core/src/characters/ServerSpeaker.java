@@ -1,6 +1,7 @@
 package characters;
 
 import com.mygdx.game.SuperSmashShoot;
+import general.Converter;
 import general.DataManager;
 
 import java.io.DataInputStream;
@@ -14,7 +15,8 @@ import java.util.List;
 public class ServerSpeaker extends Thread {
 
     private final String RESPONSES[] = {"PARTY", "FRIEND REQUEST", "CLOSE OK", "SENDING FRIEND LIST", "CONNECT OK", "CONNECT ERROR",
-    "REGISTER OK", "REGISTER REPEATED", "SENDING REQUEST LIST", "SENDING PARTY REQUESTS"};
+    "REGISTER OK", "REGISTER REPEATED", "SENDING REQUEST LIST", "SENDING PARTY REQUESTS", "INVITATION SENT", "INVITATION OFFLINE",
+    "INVITATION REPEATED", "PARTY CREATED", "JOIN OK", "PARTY FULL"};
 
     private Socket socket;
     private DataInputStream input;
@@ -65,6 +67,7 @@ public class ServerSpeaker extends Thread {
                             break;
                         case "CLOSE":
                             this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            System.out.println("envia el puto close");
                             this.output.flush();
                             break;
                         case "FRIEND LIST":
@@ -88,6 +91,27 @@ public class ServerSpeaker extends Thread {
                         case "SEND PARTY REQUEST":
                             this.output.writeBytes(this.toSend.get(0) + "\r\n");
                             this.output.writeBytes(this.toSend.get(1) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "SEND PARTY INVITATION":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(1) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(2) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "SEND MESSAGE":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(1) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(2) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "JOIN PARTY":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(1) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "CREATE PARTY":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
                             this.output.flush();
                             break;
                     }
@@ -166,6 +190,42 @@ public class ServerSpeaker extends Thread {
                             this.resetToSend();
                         }
 
+                        else if(response.equals(this.RESPONSES[10])){
+                            SuperSmashShoot.ms_message.update("Invitation sent");
+                            List<String> toSend = new ArrayList<>();
+                            toSend.add("CREATE PARTY");
+                            this.toSend = new ArrayList<>(toSend);
+                        }
+
+                        else if(response.equals(this.RESPONSES[11])){
+                            SuperSmashShoot.ms_message.update("Player is offline");
+                            this.resetToSend();
+                        }
+
+                        else if(response.equals(this.RESPONSES[12])){
+                            SuperSmashShoot.ms_message.update("Invitation already sent!!");
+                            this.resetToSend();
+                        }
+
+                        else if(response.equals(this.RESPONSES[13])){
+                            this.resetToSend();
+                        }
+
+                        else if(response.equals(this.RESPONSES[14])){
+                            String host = this.input.readLine();
+                            SuperSmashShoot.ms_message.update("You have joined " + host + " party");
+                            String playersInParty;
+
+                            while(!(playersInParty = this.input.readLine()).equals("END"))
+                                SuperSmashShoot.partyList.addItem(playersInParty);
+                            this.resetToSend();
+                        }
+
+                        else if(response.equals(this.RESPONSES[15])){
+                            SuperSmashShoot.ms_message.update("Can't join, party is full");
+                            this.resetToSend();
+                        }
+
                 } catch (IOException e) {
                    e.printStackTrace();
                 }
@@ -190,11 +250,5 @@ public class ServerSpeaker extends Thread {
     private void resetToSend(){
         this.toSend = new ArrayList<>();
         this.toSend.add("NAN");
-    }
-
-    public void closeSpeaker(){
-        List<String> toSend = new ArrayList<>();
-        toSend.add("CLOSE");
-        this.setToSend(toSend);
     }
 }

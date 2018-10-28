@@ -119,7 +119,9 @@ public class FriendsMenu extends InputAdapter implements Screen {
             @Override
             public void buttonAction() {
                 List<String> toSend = new ArrayList<>();
-                toSend.add("SEND PARTY REQUEST");
+                System.out.println(DataManager.userName);
+                toSend.add("SEND PARTY INVITATION");
+                toSend.add(DataManager.userName);
                 toSend.add(pl_friendsList.getSelectedItem());
 
                 SuperSmashShoot.serverSpeaker.setToSend(toSend);
@@ -164,9 +166,19 @@ public class FriendsMenu extends InputAdapter implements Screen {
                 IDs.PAGED_LIST_BACK, IDs.NEXT, IDs.NEXT_DOWN, IDs.PREVIOUS, IDs.PREVIOUS_DOWN) {
             @Override
             public void buttonAction() {
-                //sendPartyRequest();
+                List<String> toSend = new ArrayList<>();
+                toSend.add("JOIN PARTY");
+                toSend.add(pl_partyRequests.getSelectedItem());
+
+                SuperSmashShoot.serverSpeaker.setToSend(toSend);
             }
         };
+
+        if(DataManager.connected) {
+            List<String> party = SuperSmashShoot.serverSpeaker.getPartyList();
+            for(String friend : party)
+                pl_partyRequests.addItem(friend);
+        }
     }
 
     @Override

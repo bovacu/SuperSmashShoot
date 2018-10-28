@@ -12,7 +12,7 @@ import general.DataManager;
 
 public class Message extends Sprite implements Ui {
 
-    private final float LIFE_TIME = 2f;
+    private final float LIFE_TIME = 4f;
     private final Color COLOR = Color.valueOf(DataManager.colorToHex(DataManager.textColor));
 
     private BitmapFont font;

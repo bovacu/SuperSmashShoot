@@ -187,6 +187,7 @@ public class MainMenu extends InputAdapter implements Screen {
         this.sb_connect.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         SuperSmashShoot.ms_message.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.pl_friendsInParty.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
+        SuperSmashShoot.partyList.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.chat.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.loggin.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.game.batch.end();
