@@ -17,7 +17,7 @@ public class ServerListener extends Thread {
     private DataOutputStream output;
     private boolean stop;
 
-    private final String COMMANDS[] = {"PARTY REQUEST SENT", "CLOSE OK", "INVITATION RECEIVED", "UPDATE PARTY"};
+    private final String COMMANDS[] = {"PARTY REQUEST SENT", "CLOSE OK", "INVITATION RECEIVED", "UPDATE PARTY", "NEW FRIEND"};
 
     public ServerListener(){
         super.setDaemon(true);
@@ -61,6 +61,12 @@ public class ServerListener extends Thread {
                     SuperSmashShoot.partyList.addItem(newPlayer);
                     this.updateLists();
                 }
+                else if(this.COMMANDS[4].equals(request)){
+                    String newFriend = this.input.readLine();
+                    SuperSmashShoot.ms_message.update(newFriend + " has sent you a friend request");
+                    this.updateLists();
+                }
+
 
             }catch (IOException e){
                 e.printStackTrace();

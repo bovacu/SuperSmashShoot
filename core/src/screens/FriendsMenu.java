@@ -80,7 +80,11 @@ public class FriendsMenu extends InputAdapter implements Screen {
             @Override
             public void action() {
                 if(DataManager.connected) {
+                    List<String> toSend = new ArrayList<>();
+                    toSend.add("ADD FRIEND");
+                    toSend.add(tb_addFriend.getInfo());
 
+                    SuperSmashShoot.serverSpeaker.setToSend(toSend);
                 } else {
                     SuperSmashShoot.ms_message.update("You need to connect first!");
                     System.out.println("entra aqui");
@@ -119,7 +123,6 @@ public class FriendsMenu extends InputAdapter implements Screen {
             @Override
             public void buttonAction() {
                 List<String> toSend = new ArrayList<>();
-                System.out.println(DataManager.userName);
                 toSend.add("SEND PARTY INVITATION");
                 toSend.add(DataManager.userName);
                 toSend.add(pl_friendsList.getSelectedItem());

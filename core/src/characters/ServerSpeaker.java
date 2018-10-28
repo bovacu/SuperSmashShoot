@@ -16,7 +16,7 @@ public class ServerSpeaker extends Thread {
 
     private final String RESPONSES[] = {"PARTY", "FRIEND REQUEST", "CLOSE OK", "SENDING FRIEND LIST", "CONNECT OK", "CONNECT ERROR",
     "REGISTER OK", "REGISTER REPEATED", "SENDING REQUEST LIST", "SENDING PARTY REQUESTS", "INVITATION SENT", "INVITATION OFFLINE",
-    "INVITATION REPEATED", "PARTY CREATED", "JOIN OK", "PARTY FULL"};
+    "INVITATION REPEATED", "PARTY CREATED", "JOIN OK", "PARTY FULL", "FRIEND REQUEST SENT", "ALREADY FRIEND", "NO PLAYER"};
 
     private Socket socket;
     private DataInputStream input;
@@ -67,7 +67,6 @@ public class ServerSpeaker extends Thread {
                             break;
                         case "CLOSE":
                             this.output.writeBytes(this.toSend.get(0) + "\r\n");
-                            System.out.println("envia el puto close");
                             this.output.flush();
                             break;
                         case "FRIEND LIST":
@@ -112,6 +111,11 @@ public class ServerSpeaker extends Thread {
                             break;
                         case "CREATE PARTY":
                             this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "ADD FRIEND":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(1) + "\r\n");
                             this.output.flush();
                             break;
                     }
@@ -223,6 +227,21 @@ public class ServerSpeaker extends Thread {
 
                         else if(response.equals(this.RESPONSES[15])){
                             SuperSmashShoot.ms_message.update("Can't join, party is full");
+                            this.resetToSend();
+                        }
+
+                        else if(response.equals(this.RESPONSES[16])){
+                            SuperSmashShoot.ms_message.update("Friend request sent");
+                            this.resetToSend();
+                        }
+
+                        else if(response.equals(this.RESPONSES[17])){
+                            SuperSmashShoot.ms_message.update("You are already friends or invitation has been sent");
+                            this.resetToSend();
+                        }
+
+                        else if(response.equals(this.RESPONSES[18])){
+                            SuperSmashShoot.ms_message.update("No player found :(");
                             this.resetToSend();
                         }
 
