@@ -79,7 +79,6 @@ public class ServerListener extends Thread {
                     String message = this.input.readLine();
                     SuperSmashShoot.ms_message.update("new message from " + sender);
                     Chat.addNewMessage(sender, message);
-                    System.out.println(message);
                 }
 
             }catch (IOException e){

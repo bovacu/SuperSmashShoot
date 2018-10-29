@@ -37,7 +37,7 @@ public class FriendsMenu extends InputAdapter implements Screen {
 
     private SpriteButton sb_back;
 
-    private final float UPDATE_LIST_TIME = 2f;
+    private final float UPDATE_LIST_TIME = 1f;
     private float timePassed;
 
     public FriendsMenu(SuperSmashShoot game){
@@ -148,7 +148,11 @@ public class FriendsMenu extends InputAdapter implements Screen {
                 IDs.PAGED_LIST_BACK, IDs.NEXT, IDs.NEXT_DOWN, IDs.PREVIOUS, IDs.PREVIOUS_DOWN) {
             @Override
             public void buttonAction() {
+                List<String> toSend = new ArrayList<>();
+                toSend.add("ACCEPT FRIEND");
+                toSend.add(pl_friendRequests.getSelectedItem());
 
+                SuperSmashShoot.serverSpeaker.setToSend(toSend);
             }
         };
 
@@ -169,11 +173,15 @@ public class FriendsMenu extends InputAdapter implements Screen {
                 IDs.PAGED_LIST_BACK, IDs.NEXT, IDs.NEXT_DOWN, IDs.PREVIOUS, IDs.PREVIOUS_DOWN) {
             @Override
             public void buttonAction() {
-                List<String> toSend = new ArrayList<>();
-                toSend.add("JOIN PARTY");
-                toSend.add(pl_partyRequests.getSelectedItem());
+                if(DataManager.partyID == -1){
+                    List<String> toSend = new ArrayList<>();
+                    toSend.add("JOIN PARTY");
+                    toSend.add(pl_partyRequests.getSelectedItem());
 
-                SuperSmashShoot.serverSpeaker.setToSend(toSend);
+                    SuperSmashShoot.serverSpeaker.setToSend(toSend);
+                    pl_partyRequests.setBlockButtons(true);
+                }else
+                    SuperSmashShoot.ms_message.update("You are already in a party");
             }
         };
 
@@ -193,25 +201,16 @@ public class FriendsMenu extends InputAdapter implements Screen {
     public void render(float delta) {
 
         if(this.timePassed > this.UPDATE_LIST_TIME){
-            List<String> friends = SuperSmashShoot.serverSpeaker.getFriendsList();
-            for(String s : this.pl_friendsList.getItems()) {
-                if (!friends.contains(s))
-                    this.pl_friendsList.addItem(s);
-            }
+            this.pl_friendsList.setItems(SuperSmashShoot.serverSpeaker.getFriendsList());
 
-            List<String> request = SuperSmashShoot.serverSpeaker.getRequestsList();
-            for(String s : this.pl_friendRequests.getItems()) {
-                if (!request.contains(s))
-                    this.pl_friendRequests.addItem(s);
-            }
+            this.pl_friendRequests.setItems(SuperSmashShoot.serverSpeaker.getRequestsList());
 
-            List<String> party = SuperSmashShoot.serverSpeaker.getPartyList();
-            for(String s : this.pl_partyRequests.getItems()) {
-                if (!party.contains(s))
-                    this.pl_partyRequests.addItem(s);
-            }
+            this.pl_partyRequests.setItems(SuperSmashShoot.serverSpeaker.getPartyList());
 
             this.timePassed = 0;
+
+            if(DataManager.partyID == -1)
+                this.pl_partyRequests.setBlockButtons(false);
         }else{
             this.timePassed += delta;
         }

@@ -22,6 +22,8 @@ public abstract class PagedListWithButton extends Sprite implements Ui{
     private SpriteButton sb_itemButtons[];
     private String selectedItem;
 
+    private boolean blockButtons;
+
     private int selectedPage;
     private int itemHeight;
     private int maxPages;
@@ -44,6 +46,8 @@ public abstract class PagedListWithButton extends Sprite implements Ui{
         this.layout = new GlyphLayout();
         this.selectedPage = 0;
         this.sb_itemButtons = new SpriteButton[this.ITEMS_PER_PAGE];
+
+        this.blockButtons = false;
     }
 
     private void createNextButton(int id, int downId){
@@ -74,6 +78,10 @@ public abstract class PagedListWithButton extends Sprite implements Ui{
         this.previous.setCenterPosition(new Vector2(this.getPosition().x + this.previous.getWidth(), this.next.getCenterPosition().y));
     }
 
+    public void setBlockButtons(boolean block){
+        this.blockButtons = block;
+    }
+
     private void updateButtons(int size, int id, int idDown){
         for(int i = 0; i < size; i++){
             this.sb_itemButtons[i] = new SpriteButton(id, idDown) {
@@ -83,6 +91,13 @@ public abstract class PagedListWithButton extends Sprite implements Ui{
                 }
             };
         }
+    }
+
+    public void setItems(List<String> items){
+        this.list = new ArrayList<>(items);
+        this.maxPages = (this.list.size() % this.ITEMS_PER_PAGE == 0) ? this.list.size() / this.ITEMS_PER_PAGE :
+                (this.list.size() / this.ITEMS_PER_PAGE) + 1;
+        this.updateButtons(this.itemsToDraw(), IDs.CHECK, IDs.CHECK_DOWN);
     }
 
     public void addItem(String item){
@@ -111,7 +126,7 @@ public abstract class PagedListWithButton extends Sprite implements Ui{
             this.previous.execute(x, y);
         for(SpriteButton sb : this.sb_itemButtons)
             if(sb != null)
-                if(sb.isMouseOver(x, y))
+                if(sb.isMouseOver(x, y) && !this.blockButtons)
                     sb.execute(x, y);
     }
 

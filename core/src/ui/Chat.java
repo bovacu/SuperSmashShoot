@@ -36,6 +36,7 @@ public class Chat extends InputAdapter implements Ui {
         this.background.setPosition(chatButton.getPosition().x, chatButton.getPosition().y + chatButton.getSizes().height + 15);
 
         this.textToRender = new BitmapFont(Gdx.files.internal("fonts/flipps.fnt"));
+        this.textToRender.getData().markupEnabled = true;
         this.textToRender.getData().setScale(0.6f);
 
         this.tb_messages = new TextBox(IDs.TEXT_BOX, (int)(Chat.WIDTH * 0.905f), (int)(Chat.HEIGHT * 0.15f),

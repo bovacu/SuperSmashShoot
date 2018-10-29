@@ -33,7 +33,9 @@ public class ServerSpeaker extends Thread {
                                             "FRIEND REQUEST SENT",          //16
                                             "ALREADY FRIEND",               //17
                                             "NO PLAYER",                    //18
-                                            "MESSAGE SENT"                  //19
+                                            "MESSAGE SENT",                 //19
+                                            "ACCEPT FRIEND OK",             //20
+                                            "ACCEPT FRIEND ERROR"           //21
     };
 
     private Socket socket;
@@ -139,6 +141,11 @@ public class ServerSpeaker extends Thread {
                             this.output.writeBytes(this.toSend.get(1) + "\r\n");
                             this.output.flush();
                             break;
+                        case "ACCEPT FRIEND":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(1) + "\r\n");
+                            this.output.flush();
+                            break;
                     }
 
 
@@ -238,12 +245,17 @@ public class ServerSpeaker extends Thread {
 
                         else if(response.equals(this.RESPONSES[14])){
                             String host = this.input.readLine();
+                            DataManager.partyID = Integer.parseInt(this.input.readLine());
+                            System.out.println(DataManager.partyID);
                             SuperSmashShoot.ms_message.update("You have joined " + host + " party");
                             String playersInParty;
 
                             while(!(playersInParty = this.input.readLine()).equals("END"))
                                 SuperSmashShoot.partyList.addItem(playersInParty);
-                            this.resetToSend();
+
+                            List<String> toSend = new ArrayList<>();
+                            toSend.add("PARTY REQUEST");
+                            this.toSend = new ArrayList<>(toSend);
                         }
 
                         else if(response.equals(this.RESPONSES[15])){
@@ -269,6 +281,18 @@ public class ServerSpeaker extends Thread {
                         else if(response.equals(this.RESPONSES[19])){
                             this.resetToSend();
                         }
+                        else if(response.equals(this.RESPONSES[20])){
+                            SuperSmashShoot.ms_message.update("Friend added");
+                            List<String> toSend = new ArrayList<>();
+                            toSend.add("FRIEND LIST");
+                            this.toSend = new ArrayList<>(toSend);
+                        }
+
+                        else if(response.equals(this.RESPONSES[21])){
+                            SuperSmashShoot.ms_message.update("Couldn't add friend :(");
+                            this.resetToSend();
+                        }
+
 
                 } catch (IOException e) {
                    e.printStackTrace();

@@ -7,6 +7,7 @@ import java.util.List;
 public class DataManager {
     public static boolean connected;
     public static boolean playing;
+    public static int partyID = -1;
     public static int music;
     public static int effects;
     public static String textColor;
