@@ -41,6 +41,10 @@ public class PartyList extends Sprite implements Ui {
             this.list.add(item);
     }
 
+    public List<String> getList(){
+        return this.list;
+    }
+
     public Vector2 getPosition(){
         return new Vector2(super.getX(), super.getY());
     }

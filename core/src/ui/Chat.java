@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.SuperSmashShoot;
 import general.Converter;
-import general.DataManager;
 import general.IDs;
 
 import java.util.ArrayList;
@@ -17,9 +16,9 @@ import java.util.List;
 
 public class Chat extends InputAdapter implements Ui {
 
-    private final int WIDTH, HEIGHT, TB_LENGTH, CHAT_LENGTH;
+    private static final int WIDTH = 650, HEIGHT = 512, TB_LENGTH = 23, CHAT_LENGTH = 30;
 
-    private String log;
+    private static String log;
     private Sprite background;
 
     private SpriteButton sb_sendMessage;
@@ -29,22 +28,18 @@ public class Chat extends InputAdapter implements Ui {
     private boolean visible;
 
     public Chat(SpriteButton chatButton){
-        this.log = "";
+        Chat.log = "";
         this.visible = false;
-
-        this.WIDTH = 650;
-        this.HEIGHT = 512;
-        this.TB_LENGTH = 27;
-        this.CHAT_LENGTH = 30;
 
         this.background = Converter.idToSprite(IDs.PAGED_LIST_BACK);
         this.background.setSize(WIDTH, HEIGHT);
         this.background.setPosition(chatButton.getPosition().x, chatButton.getPosition().y + chatButton.getSizes().height + 15);
 
         this.textToRender = new BitmapFont(Gdx.files.internal("fonts/flipps.fnt"));
+        this.textToRender.getData().setScale(0.6f);
 
-        this.tb_messages = new TextBox(IDs.TEXT_BOX, (int)(this.WIDTH * 0.905f), (int)(this.HEIGHT * 0.15f),
-                new Vector2(this.background.getX(), this.background.getY()), this.TB_LENGTH);
+        this.tb_messages = new TextBox(IDs.TEXT_BOX, (int)(Chat.WIDTH * 0.905f), (int)(Chat.HEIGHT * 0.15f),
+                new Vector2(this.background.getX(), this.background.getY()), Chat.TB_LENGTH);
 
 
         this.sb_sendMessage = new SpriteButton(IDs.SEND, IDs.SEND_DOWN) {
@@ -53,7 +48,6 @@ public class Chat extends InputAdapter implements Ui {
                 if(!tb_messages.getInfo().equals("\\s+")){
                     List<String> toSend = new ArrayList<>();
                     toSend.add("SEND MESSAGE");
-                    toSend.add(DataManager.userName);
                     toSend.add(tb_messages.info);
 
                     SuperSmashShoot.serverSpeaker.setToSend(toSend);
@@ -61,8 +55,8 @@ public class Chat extends InputAdapter implements Ui {
             }
         };
 
-        this.sb_sendMessage.setButtonSize(this.WIDTH * 0.1f, this.HEIGHT * 0.15f);
-        this.sb_sendMessage.setPosition(new Vector2(this.background.getX() + this.tb_messages.getWidth() * 0.89f + this.WIDTH * 0.1f,
+        this.sb_sendMessage.setButtonSize(Chat.WIDTH * 0.1f, Chat.HEIGHT * 0.15f);
+        this.sb_sendMessage.setPosition(new Vector2(this.background.getX() + this.tb_messages.getWidth() * 0.89f + Chat.WIDTH * 0.1f,
                 this.background.getY()));
     }
 
@@ -80,7 +74,8 @@ public class Chat extends InputAdapter implements Ui {
             this.background.draw(batch);
             this.tb_messages.render(batch, x, y);
             this.sb_sendMessage.render(batch, x, y);
-            // this.textToRender.draw();
+            this.textToRender.draw(batch, Chat.log, this.background.getX() + Chat.WIDTH * 0.07f, this.background.getY() + this.background.getHeight() -
+                    Chat.HEIGHT * 0.07f);
         }
     }
 
@@ -100,33 +95,33 @@ public class Chat extends InputAdapter implements Ui {
         }
     }
 
-    public void addNewMessage(String user, String message){
+    public static void addNewMessage(String user, String message){
         String aux = user + ": " + message;
 
-        if(aux.length() >= this.CHAT_LENGTH){
-            int splits = aux.length() / this.CHAT_LENGTH;
+        if(aux.length() >= Chat.CHAT_LENGTH){
+            int splits = aux.length() / Chat.CHAT_LENGTH;
             int lastI = 0;
             String newMessage = "";
             for(int i = 0; i < splits; i++){
-                newMessage += aux.substring(i * this.CHAT_LENGTH, i * this.CHAT_LENGTH + this.CHAT_LENGTH) + "\n";
+                newMessage += aux.substring(i * Chat.CHAT_LENGTH, i * Chat.CHAT_LENGTH + Chat.CHAT_LENGTH) + "\n";
                 lastI = i;
             }
 
-            if(aux.length() % this.CHAT_LENGTH != 0) {
-                newMessage += aux.substring(lastI * this.CHAT_LENGTH + this.CHAT_LENGTH) + "\n\n";
+            if(aux.length() % Chat.CHAT_LENGTH != 0) {
+                newMessage += aux.substring(lastI * Chat.CHAT_LENGTH + Chat.CHAT_LENGTH) + "\n\n";
             } else
                 newMessage += "\n";
 
-            this.log += newMessage;
+            Chat.log += newMessage;
         }else{
-            this.log += aux;
+            Chat.log += aux + "\n\n";
         }
     }
 
     @Override
     public boolean keyDown(int key){
         if(this.visible)
-            if(key == Input.Keys.DEL || key == Input.Keys.ENTER || key == Input.Keys.CONTROL_LEFT || key == Input.Keys.CONTROL_RIGHT
+            if(key == Input.Keys.DEL || key == Input.Keys.CONTROL_LEFT || key == Input.Keys.CONTROL_RIGHT
                     || key == Input.Keys.SHIFT_LEFT || key == Input.Keys.SHIFT_RIGHT || key == Input.Keys.ESCAPE
                     || key == Input.Keys.TAB) {
                 this.tb_messages.setCanGetLetter(false);
@@ -134,7 +129,12 @@ public class Chat extends InputAdapter implements Ui {
                 if(key == (Input.Keys.DEL)) {
                     this.tb_messages.removeLetter();
                 }
-            } else {
+            } else if(key == Input.Keys.ENTER){
+                if(this.tb_messages.isSelected()){
+                    this.sb_sendMessage.action();
+                    this.tb_messages.resetInfo();
+                }
+            }else {
                 this.tb_messages.setCanGetLetter(true);
                 this.tb_messages.setCanGetLetter(true);
             }

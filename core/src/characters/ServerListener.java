@@ -1,11 +1,11 @@
 package characters;
 
 import com.mygdx.game.SuperSmashShoot;
+import ui.Chat;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +17,20 @@ public class ServerListener extends Thread {
     private DataOutputStream output;
     private boolean stop;
 
-    private final String COMMANDS[] = {"PARTY REQUEST SENT", "CLOSE OK", "INVITATION RECEIVED", "UPDATE PARTY", "NEW FRIEND"};
+    private final String COMMANDS[] = { "PARTY REQUEST SENT",           //0
+                                        "CLOSE OK",                     //1
+                                        "INVITATION RECEIVED",          //2
+                                        "UPDATE PARTY",                 //3
+                                        "NEW FRIEND",                   //4
+                                        "RECEIVE MESSAGE"               //5
+    };
 
     public ServerListener(){
         super.setDaemon(true);
         this.stop = false;
 
         try {
-            this.socket = new Socket("192.168.1.40", SuperSmashShoot.PORT);
+            this.socket = new Socket("localhost", SuperSmashShoot.PORT);
             this.input = new DataInputStream(this.socket.getInputStream());
             this.output = new DataOutputStream(this.socket.getOutputStream());
         } catch (IOException e) {
@@ -61,12 +67,20 @@ public class ServerListener extends Thread {
                     SuperSmashShoot.partyList.addItem(newPlayer);
                     this.updateLists();
                 }
+
                 else if(this.COMMANDS[4].equals(request)){
                     String newFriend = this.input.readLine();
                     SuperSmashShoot.ms_message.update(newFriend + " has sent you a friend request");
                     this.updateLists();
                 }
 
+                else if(this.COMMANDS[5].equals(request)){
+                    String sender = this.input.readLine();
+                    String message = this.input.readLine();
+                    SuperSmashShoot.ms_message.update("new message from " + sender);
+                    Chat.addNewMessage(sender, message);
+                    System.out.println(message);
+                }
 
             }catch (IOException e){
                 e.printStackTrace();

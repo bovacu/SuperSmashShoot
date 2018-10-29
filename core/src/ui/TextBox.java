@@ -67,6 +67,14 @@ public class TextBox extends Sprite implements Ui {
         return new Vector2(super.getX(), super.getY());
     }
 
+    public boolean isSelected(){
+        return this.selected;
+    }
+
+    public void resetInfo(){
+        this.info = "";
+    }
+
     public void execute(int x, int y){
         if(this.isMouseOver(x, y))
             this.selected = true;

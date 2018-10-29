@@ -3,20 +3,38 @@ package characters;
 import com.mygdx.game.SuperSmashShoot;
 import general.Converter;
 import general.DataManager;
+import ui.Chat;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServerSpeaker extends Thread {
 
-    private final String RESPONSES[] = {"PARTY", "FRIEND REQUEST", "CLOSE OK", "SENDING FRIEND LIST", "CONNECT OK", "CONNECT ERROR",
-    "REGISTER OK", "REGISTER REPEATED", "SENDING REQUEST LIST", "SENDING PARTY REQUESTS", "INVITATION SENT", "INVITATION OFFLINE",
-    "INVITATION REPEATED", "PARTY CREATED", "JOIN OK", "PARTY FULL", "FRIEND REQUEST SENT", "ALREADY FRIEND", "NO PLAYER"};
+    private final String RESPONSES[] = {    "PARTY",                        //0
+                                            "FRIEND REQUEST",               //1
+                                            "CLOSE OK",                     //2
+                                            "SENDING FRIEND LIST",          //3
+                                            "CONNECT OK",                   //4
+                                            "CONNECT ERROR",                //5
+                                            "REGISTER OK",                  //6
+                                            "REGISTER REPEATED",            //7
+                                            "SENDING REQUEST LIST",         //8
+                                            "SENDING PARTY REQUESTS",       //9
+                                            "INVITATION SENT",              //10
+                                            "INVITATION OFFLINE",           //11
+                                            "INVITATION REPEATED",          //12
+                                            "PARTY CREATED",                //13
+                                            "JOIN OK",                      //14
+                                            "PARTY FULL",                   //15
+                                            "FRIEND REQUEST SENT",          //16
+                                            "ALREADY FRIEND",               //17
+                                            "NO PLAYER",                    //18
+                                            "MESSAGE SENT"                  //19
+    };
 
     private Socket socket;
     private DataInputStream input;
@@ -35,7 +53,7 @@ public class ServerSpeaker extends Thread {
         this.stop = false;
 
         try {
-            this.socket = new Socket("192.168.1.40", SuperSmashShoot.PORT);
+            this.socket = new Socket("localhost", SuperSmashShoot.PORT);
             this.input = new DataInputStream(this.socket.getInputStream());
             this.output = new DataOutputStream(this.socket.getOutputStream());
         } catch (IOException e) {
@@ -99,9 +117,12 @@ public class ServerSpeaker extends Thread {
                             this.output.flush();
                             break;
                         case "SEND MESSAGE":
+                            Chat.addNewMessage(DataManager.userName, this.toSend.get(1));
                             this.output.writeBytes(this.toSend.get(0) + "\r\n");
                             this.output.writeBytes(this.toSend.get(1) + "\r\n");
-                            this.output.writeBytes(this.toSend.get(2) + "\r\n");
+                            for(String s : SuperSmashShoot.partyList.getList())
+                                this.output.writeBytes(s + "\r\n");
+                            this.output.writeBytes("END" + "\r\n");
                             this.output.flush();
                             break;
                         case "JOIN PARTY":
@@ -242,6 +263,10 @@ public class ServerSpeaker extends Thread {
 
                         else if(response.equals(this.RESPONSES[18])){
                             SuperSmashShoot.ms_message.update("No player found :(");
+                            this.resetToSend();
+                        }
+
+                        else if(response.equals(this.RESPONSES[19])){
                             this.resetToSend();
                         }
 
