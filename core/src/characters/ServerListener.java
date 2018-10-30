@@ -30,7 +30,7 @@ public class ServerListener extends Thread {
         this.stop = false;
 
         try {
-            this.socket = new Socket("localhost", SuperSmashShoot.PORT);
+            this.socket = new Socket("192.168.1.40", SuperSmashShoot.PORT);
             this.input = new DataInputStream(this.socket.getInputStream());
             this.output = new DataOutputStream(this.socket.getOutputStream());
         } catch (IOException e) {
@@ -77,17 +77,12 @@ public class ServerListener extends Thread {
                 else if(this.COMMANDS[5].equals(request)){
                     String sender = this.input.readLine();
                     String message = this.input.readLine();
-                    SuperSmashShoot.ms_message.update("new message from " + sender);
+                    SuperSmashShoot.ms_message.update("new message from " + sender.split("]")[1]
+                            .replaceAll("\\[", "").replaceAll("]", ""));
                     Chat.addNewMessage(sender, message);
                 }
 
             }catch (IOException e){
-                e.printStackTrace();
-            }
-
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

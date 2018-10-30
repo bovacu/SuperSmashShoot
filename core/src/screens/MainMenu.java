@@ -80,7 +80,7 @@ public class MainMenu extends InputAdapter implements Screen {
         this.sb_chat = new SpriteButton(IDs.CHAT, IDs.CHAT_DOWN) {
             @Override
             public void action() {
-                if(!chat.isVisible()){
+                if(!chat.isVisible() && DataManager.connected){
                     loggin.setClosed(true);
                     chat.setVisible(true);
                 }else

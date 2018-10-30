@@ -73,6 +73,7 @@ public class TextBox extends Sprite implements Ui {
 
     public void resetInfo(){
         this.info = "";
+        this.shown = "";
     }
 
     public void execute(int x, int y){

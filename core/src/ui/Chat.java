@@ -16,9 +16,10 @@ import java.util.List;
 
 public class Chat extends InputAdapter implements Ui {
 
-    private static final int WIDTH = 650, HEIGHT = 512, TB_LENGTH = 23, CHAT_LENGTH = 30;
+    private static final int WIDTH = 650, HEIGHT = 512, TB_LENGTH = 23, CHAT_LENGTH = 31, CHAT_MAX_LINES = 14;
 
-    private static String log;
+    private static String log, shown;
+    private static int shownPointer, scrollShownPointer;
     private Sprite background;
 
     private SpriteButton sb_sendMessage;
@@ -29,6 +30,9 @@ public class Chat extends InputAdapter implements Ui {
 
     public Chat(SpriteButton chatButton){
         Chat.log = "";
+        Chat.shown = "";
+        Chat.shownPointer = 0;
+        Chat.scrollShownPointer = Chat.shownPointer;
         this.visible = false;
 
         this.background = Converter.idToSprite(IDs.PAGED_LIST_BACK);
@@ -52,6 +56,7 @@ public class Chat extends InputAdapter implements Ui {
                     toSend.add(tb_messages.info);
 
                     SuperSmashShoot.serverSpeaker.setToSend(toSend);
+                    tb_messages.resetInfo();
                 }
             }
         };
@@ -75,7 +80,7 @@ public class Chat extends InputAdapter implements Ui {
             this.background.draw(batch);
             this.tb_messages.render(batch, x, y);
             this.sb_sendMessage.render(batch, x, y);
-            this.textToRender.draw(batch, Chat.log, this.background.getX() + Chat.WIDTH * 0.07f, this.background.getY() + this.background.getHeight() -
+            this.textToRender.draw(batch, Chat.shown, this.background.getX() + Chat.WIDTH * 0.07f, this.background.getY() + this.background.getHeight() -
                     Chat.HEIGHT * 0.07f);
         }
     }
@@ -98,25 +103,60 @@ public class Chat extends InputAdapter implements Ui {
 
     public static void addNewMessage(String user, String message){
         String aux = user + ": " + message;
+        String newMessage = "";
+        int off = 0;
 
-        if(aux.length() >= Chat.CHAT_LENGTH){
-            int splits = aux.length() / Chat.CHAT_LENGTH;
+        if(user.contains("GREEN")) {
+            off += 9;
+            System.out.println("contiene GREEN");
+        } else if(user.contains("ORANGE")) {
+            off += 10;
+            System.out.println("contiene ORANGE");
+        } else if(user.contains("PINK")) {
+            off += 8;
+            System.out.println("contiene PINK");
+        }
+
+        if(aux.length() >= Chat.CHAT_LENGTH + off){
+            int splits = aux.length() / (Chat.CHAT_LENGTH + off);
             int lastI = 0;
-            String newMessage = "";
+            newMessage = "";
             for(int i = 0; i < splits; i++){
-                newMessage += aux.substring(i * Chat.CHAT_LENGTH, i * Chat.CHAT_LENGTH + Chat.CHAT_LENGTH) + "\n";
+                newMessage += aux.substring(i * (Chat.CHAT_LENGTH + off), i * (Chat.CHAT_LENGTH + off) + (Chat.CHAT_LENGTH + off)) + "\n";
                 lastI = i;
             }
 
             if(aux.length() % Chat.CHAT_LENGTH != 0) {
-                newMessage += aux.substring(lastI * Chat.CHAT_LENGTH + Chat.CHAT_LENGTH) + "\n\n";
+                newMessage += aux.substring(lastI * (Chat.CHAT_LENGTH + off) + (Chat.CHAT_LENGTH + off)) + "\n\n";
             } else
-                newMessage += "\n";
+                newMessage += "\n\n";
 
             Chat.log += newMessage;
         }else{
             Chat.log += aux + "\n\n";
         }
+
+        if(Chat.countLinesOfLog() >= Chat.CHAT_MAX_LINES){
+            Chat.shownPointer += Chat.countLinesOfMessage((aux.length() >= Chat.CHAT_LENGTH + off) ? newMessage : aux);
+            String newShown[] = Chat.log.split("\r\n|\r|\n");
+
+            Chat.shown = "";
+            for(int i = Chat.shownPointer; i < newShown.length; i++){
+                Chat.shown += newShown[i] + "\n";
+            }
+            Chat.scrollShownPointer = Chat.shownPointer;
+        }else
+            Chat.shown = Chat.log;
+    }
+
+    private static int countLinesOfLog(){
+        String[] lines = Chat.log.split("\r\n|\r|\n");
+        return  lines.length + 1;
+    }
+
+    private static int countLinesOfMessage(String message){
+        String[] lines = message.split("\r\n|\r|\n");
+        return  lines.length + 1;
     }
 
     @Override
@@ -124,18 +164,17 @@ public class Chat extends InputAdapter implements Ui {
         if(this.visible)
             if(key == Input.Keys.DEL || key == Input.Keys.CONTROL_LEFT || key == Input.Keys.CONTROL_RIGHT
                     || key == Input.Keys.SHIFT_LEFT || key == Input.Keys.SHIFT_RIGHT || key == Input.Keys.ESCAPE
-                    || key == Input.Keys.TAB) {
+                    || key == Input.Keys.TAB || key == Input.Keys.ENTER) {
                 this.tb_messages.setCanGetLetter(false);
 
                 if(key == (Input.Keys.DEL)) {
                     this.tb_messages.removeLetter();
                 }
-            } else if(key == Input.Keys.ENTER){
-                if(this.tb_messages.isSelected()){
+
+                if(key == Input.Keys.ENTER && this.tb_messages.isSelected()){
                     this.sb_sendMessage.action();
-                    this.tb_messages.resetInfo();
                 }
-            }else {
+            } else {
                 this.tb_messages.setCanGetLetter(true);
                 this.tb_messages.setCanGetLetter(true);
             }
@@ -152,5 +191,52 @@ public class Chat extends InputAdapter implements Ui {
             if(this.tb_messages.isCanGetLetter())
                 this.tb_messages.addLetter(String.valueOf(key));
         return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        if(this.visible) {
+            String newShown[] = Chat.log.split("\r\n|\r|\n");
+            if(amount > 0 && Chat.scrollShownPointer + amount < Chat.CHAT_MAX_LINES - 3 + Chat.shownPointer){
+                Chat.scrollShownPointer += amount;
+                System.out.println(Chat.CHAT_MAX_LINES - 3 + Chat.shownPointer + " - " + Chat.scrollShownPointer);
+            }else if(amount < 0 && Chat.scrollShownPointer + amount >= 0){
+                Chat.scrollShownPointer += amount;
+            }
+
+            Chat.shown = "";
+            int counter = 0;
+            for(int i = Chat.scrollShownPointer; i < newShown.length; i++){
+                if(counter < Chat.CHAT_MAX_LINES - 2){
+                    Chat.shown += newShown[i] + "\n";
+                    counter++;
+                }else
+                    break;
+            }
+        }
+        return false;
+    }
+
+    public static String transformMessageToFit(String user, String message){
+        String aux = user + ": " + message;
+
+        if(aux.length() >= Chat.CHAT_LENGTH){
+            int splits = aux.length() / Chat.CHAT_LENGTH;
+            int lastI = 0;
+            String newMessage = "";
+            for(int i = 0; i < splits; i++){
+                newMessage += aux.substring(i * Chat.CHAT_LENGTH, i * Chat.CHAT_LENGTH + Chat.CHAT_LENGTH) + "\n";
+                lastI = i;
+            }
+
+            if(aux.length() % Chat.CHAT_LENGTH != 0) {
+                newMessage += aux.substring(lastI * Chat.CHAT_LENGTH + Chat.CHAT_LENGTH) + "\n\n";
+            } else
+                newMessage += "\n";
+
+            return newMessage;
+        }else{
+            return aux;
+        }
     }
 }
