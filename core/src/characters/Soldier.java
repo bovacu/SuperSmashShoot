@@ -67,50 +67,52 @@ public class Soldier extends Player {
     public void applyCollisions(List<Tile> tileList) {
         boolean attached = false;
         for(Tile tile : tileList) {
-            // Feet collider
-            if(super.getColliders()[0].overlaps(tile.getCollider())) {
-                super.yVelocity = 0;
-                super.getSprite().setY(tile.getCollider().y + tile.getCollider().height);
-                this.update();
-                super.setCanJump(true);
-                attached = false;
-            }
+            if(tile.getCollider() != null){
+                // Feet collider
+                if(super.getColliders()[0].overlaps(tile.getCollider())) {
+                    super.yVelocity = 0;
+                    super.getSprite().setY(tile.getCollider().y + tile.getCollider().height);
+                    this.update();
+                    super.setCanJump(true);
+                    attached = false;
+                }
 
-            // Head collider
-            if(super.getColliders()[1].overlaps(tile.getCollider())){
-                this.yVelocity = 0;
-                super.getSprite().setY(tile.getCollider().y - super.getSprite().getHeight());
-                this.update();
-                super.setCanJump(false);
-                super.setJumping(false);
-            }
+                // Head collider
+                if(super.getColliders()[1].overlaps(tile.getCollider())){
+                    this.yVelocity = 0;
+                    super.getSprite().setY(tile.getCollider().y - super.getSprite().getHeight());
+                    this.update();
+                    super.setCanJump(false);
+                    super.setJumping(false);
+                }
 
-            // Left collider
-            if(super.getColliders()[2].overlaps(tile.getCollider())){
-                super.setCanJump(true);
-                float diff = super.getColliders()[2].x - super.getSprite().getX();
-                super.getSprite().setX(tile.getCollider().x + tile.getCollider().width - diff);
-                this.update();
-                if(!attached)
-                    attached = true;
-            }
+                // Left collider
+                if(super.getColliders()[2].overlaps(tile.getCollider())){
+                    super.setCanJump(true);
+                    float diff = super.getColliders()[2].x - super.getSprite().getX();
+                    super.getSprite().setX(tile.getCollider().x + tile.getCollider().width - diff);
+                    this.update();
+                    if(!attached)
+                        attached = true;
+                }
 
-            // Right collider
-            if(super.getColliders()[3].overlaps(tile.getCollider())){
-                super.setCanJump(true);
-                float right = super.getSprite().getX() + super.getSprite().getWidth();
-                float diff = right - (super.getColliders()[3].x + super.getColliders()[3].width);
-                super.getSprite().setX(tile.getCollider().x - super.getSprite().getWidth() + diff);
-                this.update();
-                if(!attached)
-                    attached = true;
-            }
+                // Right collider
+                if(super.getColliders()[3].overlaps(tile.getCollider())){
+                    super.setCanJump(true);
+                    float right = super.getSprite().getX() + super.getSprite().getWidth();
+                    float diff = right - (super.getColliders()[3].x + super.getColliders()[3].width);
+                    super.getSprite().setX(tile.getCollider().x - super.getSprite().getWidth() + diff);
+                    this.update();
+                    if(!attached)
+                        attached = true;
+                }
 
-            if(attached) {
-                super.setApplyGravity(false);
-                super.setJumping(false);
-            }else{
-                super.setApplyGravity(true);
+                if(attached) {
+                    super.setApplyGravity(false);
+                    super.setJumping(false);
+                }else{
+                    super.setApplyGravity(true);
+                }
             }
         }
     }

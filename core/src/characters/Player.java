@@ -18,8 +18,8 @@ import java.util.List;
 public abstract class Player extends GameObject implements Serializable {
 
     public static final int PLAYER_WH = 64;
-    public static float GRAVITY = -30f;
-    public static final float MAX_FALL_SPEED = -10;
+    public static float GRAVITY = -15f;
+    public static final float MAX_FALL_SPEED = -15;
     public static final int MAX_JUMP_SPEED = 10;
 
     private Rectangle collider[];

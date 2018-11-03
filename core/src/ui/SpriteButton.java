@@ -9,8 +9,8 @@ import java.awt.*;
 
 public abstract class SpriteButton extends Sprite implements Ui{
 
-    private Sprite downButton;
-    private Sprite toRender;
+    Sprite downButton;
+    Sprite toRender;
 
     public SpriteButton(int id, int downId){
         super(Converter.idToSprite(id));
@@ -61,7 +61,7 @@ public abstract class SpriteButton extends Sprite implements Ui{
                 y >= super.getY() && y < super.getY() + super.getHeight());
     }
 
-    private void update(int x, int y){
+    void update(int x, int y){
         if(!this.isMouseOver(x, y) && toRender != this)
             toRender = this;
         else if(this.isMouseOver(x, y) && toRender != this.downButton)

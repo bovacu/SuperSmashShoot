@@ -1,7 +1,6 @@
 package characters;
 
 import com.mygdx.game.SuperSmashShoot;
-import general.Converter;
 import general.DataManager;
 import ui.Chat;
 
@@ -35,7 +34,11 @@ public class ServerSpeaker extends Thread {
                                             "NO PLAYER",                    //18
                                             "MESSAGE SENT",                 //19
                                             "ACCEPT FRIEND OK",             //20
-                                            "ACCEPT FRIEND ERROR"           //21
+                                            "ACCEPT FRIEND ERROR",          //21
+                                            "PARTY LEFT",                   //22
+                                            "SENDING STATS LIST",           //23
+                                            "FRIEND REMOVED",               //24
+                                            "FRIEND REMOVE ERROR"           //25
     };
 
     private Socket socket;
@@ -44,21 +47,24 @@ public class ServerSpeaker extends Thread {
     private boolean stop;
     private List<String> toSend;
 
-    private List<String> friendsList, requestsList, partyList;
+    private List<String> friendsList, requestsList, partyList, statsList;
 
     public ServerSpeaker(){
         super.setDaemon(true);
         this.toSend = new ArrayList<>();
         this.requestsList = new ArrayList<>();
         this.partyList = new ArrayList<>();
+        this.friendsList = new ArrayList<>();
+        this.statsList = new ArrayList<>();
         this.toSend.add("NAN");
         this.stop = false;
 
         try {
-            this.socket = new Socket("192.168.1.40", SuperSmashShoot.PORT);
+            this.socket = new Socket("localhost", SuperSmashShoot.PORT);
             this.input = new DataInputStream(this.socket.getInputStream());
             this.output = new DataOutputStream(this.socket.getOutputStream());
         } catch (IOException e) {
+            SuperSmashShoot.ms_message.update("Couldn't connect to server, restart game");
             e.printStackTrace();
         }
     }
@@ -72,6 +78,7 @@ public class ServerSpeaker extends Thread {
     }
     public List<String> getRequestsList(){return this.requestsList; }
     public List<String> getPartyList(){return this.partyList; }
+    public List<String> getStatsList() {return this.statsList; }
 
     @Override
     public void run() {
@@ -142,6 +149,22 @@ public class ServerSpeaker extends Thread {
                             this.output.flush();
                             break;
                         case "ACCEPT FRIEND":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(1) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "LEAVE PARTY":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            for(String friend : SuperSmashShoot.partyList.getList())
+                                this.output.writeBytes(friend + "\r\n");
+                            this.output.writeBytes("END" + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "STATS LIST":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "REMOVE FRIEND":
                             this.output.writeBytes(this.toSend.get(0) + "\r\n");
                             this.output.writeBytes(this.toSend.get(1) + "\r\n");
                             this.output.flush();
@@ -219,7 +242,9 @@ public class ServerSpeaker extends Thread {
                             this.partyList = new ArrayList<>();
                             while(!(response = this.input.readLine()).equals("END"))
                                 this.partyList.add(response);
-                            this.resetToSend();
+                            List<String> toSend = new ArrayList<>();
+                            toSend.add("STATS LIST");
+                            this.toSend = new ArrayList<>(toSend);
                         }
 
                         else if(response.equals(this.RESPONSES[10])){
@@ -290,6 +315,32 @@ public class ServerSpeaker extends Thread {
 
                         else if(response.equals(this.RESPONSES[21])){
                             SuperSmashShoot.ms_message.update("Couldn't add friend :(");
+                            this.resetToSend();
+                        }
+
+                        else if(response.equals(this.RESPONSES[22])){
+                            DataManager.partyID = -1;
+                            SuperSmashShoot.partyList.resetList();
+                            SuperSmashShoot.ms_message.update("You have left the party");
+                            this.resetToSend();
+                        }
+
+                        else if(response.equals(this.RESPONSES[23])){
+                            this.statsList = new ArrayList<>();
+                            while(!(response = this.input.readLine()).equals("END"))
+                                this.statsList.add(response);
+                            this.resetToSend();
+                        }
+
+                        else if(response.equals(this.RESPONSES[24])){
+                            SuperSmashShoot.ms_message.update("Friend removed");
+                            List<String> toSend = new ArrayList<>();
+                            toSend.add("FRIEND LIST");
+                            this.toSend = new ArrayList<>(toSend);
+                        }
+
+                        else if(response.equals(this.RESPONSES[25])){
+                            SuperSmashShoot.ms_message.update("Error removing, friend not found");
                             this.resetToSend();
                         }
 

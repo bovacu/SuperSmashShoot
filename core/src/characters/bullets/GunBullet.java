@@ -115,8 +115,9 @@ public class GunBullet extends Bullet{
     @Override
     public void interact(List<Tile> tile) {
         for(Tile t : tile)
-            if(super.getCollider().overlaps(t.getCollider()))
-                this.setStartDestroyAnimation(true);
+            if(t.getCollider() != null)
+                if(super.getCollider().overlaps(t.getCollider()))
+                    this.setStartDestroyAnimation(true);
     }
 
     @Override

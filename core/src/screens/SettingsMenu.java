@@ -6,11 +6,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.SuperSmashShoot;
+import general.Converter;
 import general.DataManager;
 import general.IDs;
 import ui.Label;
@@ -37,6 +39,8 @@ public class SettingsMenu extends InputAdapter implements Screen {
     private int colorIndex;
     private int uiIndex;
 
+    private Sprite background;
+
     public SettingsMenu(SuperSmashShoot game){
         this.game = game;
         this.camera = new OrthographicCamera();
@@ -58,6 +62,9 @@ public class SettingsMenu extends InputAdapter implements Screen {
         this.createBlock4();
         this.createBlock5();
 
+        this.background = Converter.idToSprite(IDs.BACKGROUND1);
+        this.background.setSize(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT);
+
         Gdx.input.setInputProcessor(this);
     }
 
@@ -68,7 +75,7 @@ public class SettingsMenu extends InputAdapter implements Screen {
         this.lb_music.setPosition(new Vector2(offset + SuperSmashShoot.SCREEN_WIDTH / 4f,
                 this.lb_settings.getPosition().y - this.lb_music.getHeight() * 5));
 
-        this.sb_minusMusic = new SpriteButton(IDs.MINUS_BUTTON, IDs.MINUS_BUTTON_DOWN) {
+        this.sb_minusMusic = new SpriteButton(IDs.PREVIOUS, IDs.PREVIOUS_DOWN) {
             @Override
             public void action() {
                 if(DataManager.music - 10 >= 0) {
@@ -84,7 +91,7 @@ public class SettingsMenu extends InputAdapter implements Screen {
         this.lb_musicValue = new Label(String.valueOf(DataManager.music), new Vector2(), 1f);
         this.lb_musicValue.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
-        this.sb_plusMusic = new SpriteButton(IDs.PLUS_BUTTON, IDs.PLUS_BUTTON_DOWN) {
+        this.sb_plusMusic = new SpriteButton(IDs.NEXT, IDs.NEXT_DOWN) {
             @Override
             public void action() {
                 if(DataManager.music + 10 <= 100) {
@@ -109,7 +116,7 @@ public class SettingsMenu extends InputAdapter implements Screen {
         this.lb_effects.setPosition(new Vector2(offset + SuperSmashShoot.SCREEN_WIDTH / 4f,
                 this.lb_music.getPosition().y - this.lb_music.getHeight() * 3));
 
-        this.sb_minusEffects = new SpriteButton(IDs.MINUS_BUTTON, IDs.MINUS_BUTTON_DOWN) {
+        this.sb_minusEffects = new SpriteButton(IDs.PREVIOUS, IDs.PREVIOUS_DOWN) {
             @Override
             public void action() {
                 if(DataManager.effects - 10 >= 0) {
@@ -124,7 +131,7 @@ public class SettingsMenu extends InputAdapter implements Screen {
 
         this.lb_effectsValue = new Label(String.valueOf(DataManager.effects), new Vector2(), 1f);
         this.lb_effectsValue.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
-        this.sb_plusEffects = new SpriteButton(IDs.PLUS_BUTTON, IDs.PLUS_BUTTON_DOWN) {
+        this.sb_plusEffects = new SpriteButton(IDs.NEXT, IDs.NEXT_DOWN) {
             @Override
             public void action() {
                 if(DataManager.effects + 10 <= 100) {
@@ -255,7 +262,7 @@ public class SettingsMenu extends InputAdapter implements Screen {
         };
         this.sb_back.setPosition(new Vector2(offset, offset));
 
-        this.sb_apply = new SpriteButton(IDs.CHECK, IDs.CHECK_DOWN) {
+        this.sb_apply = new SpriteButton(IDs.SAVE, IDs.SAVE_DOWN) {
             @Override
             public void action() {
                 DataManager.writeData();
@@ -281,6 +288,7 @@ public class SettingsMenu extends InputAdapter implements Screen {
         Vector3 mousePos = this.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 
         this.game.batch.begin();
+        this.background.draw(this.game.batch);
         this.lb_settings.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
 
         this.lb_music.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
@@ -331,6 +339,7 @@ public class SettingsMenu extends InputAdapter implements Screen {
 
     @Override
     public void dispose() {
+        this.background.getTexture().dispose();
         this.sb_apply.dispose();
         this.sb_back.dispose();
         this.sb_minusEffects.dispose();

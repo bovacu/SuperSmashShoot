@@ -13,6 +13,7 @@ public class DataManager {
     public static String textColor;
     public static String uiColor;
     public static String userName;
+    public static String font;
 
     public static void loadData(){
         try(BufferedReader br = new BufferedReader(new FileReader(new File("data/settings.dat")))){
@@ -29,6 +30,7 @@ public class DataManager {
                         break;
                     case "ui" :         DataManager.uiColor = keyValue[1];
                         break;
+                    case "font" :       DataManager.font = keyValue[1];
                 }
             }
         } catch (IOException e) {

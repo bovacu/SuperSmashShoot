@@ -6,18 +6,17 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.SuperSmashShoot;
+import general.Converter;
 import general.DataManager;
 import general.IDs;
 import maps.Map;
 import ui.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainMenu extends InputAdapter implements Screen {
 
@@ -36,11 +35,16 @@ public class MainMenu extends InputAdapter implements Screen {
     private Loggin loggin;
     private Chat chat;
 
+    private Sprite background;
+
     public MainMenu(SuperSmashShoot game){
         this.game = game;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT);
         this.viewport = new FitViewport(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT, this.camera);
+
+        this.background = Converter.idToSprite(IDs.BACKGROUND1);
+        this.background.setSize(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT);
 
         this.constructButtons();
         this.setButtonsPositions();
@@ -58,15 +62,15 @@ public class MainMenu extends InputAdapter implements Screen {
     }
 
     private void constructButtons(){
-        this.sb_local = new SpriteButton(IDs.LOCAL, IDs.LOCAL_DOWN) {
+        this.sb_local = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN,"LOCAL", 512, 128, 1f) {
             @Override
             public void action() {
                 this.dispose();
-                game.setScreen(new Map(game, "testMap.txt"));
+                game.setScreen(new Map(game, "port.txt"));
             }
         };
 
-        this.sb_multiplayer = new SpriteButton(IDs.MULTIPLAYER, IDs.MULTIPLAYER_DOWN) {
+        this.sb_multiplayer = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "MULTIPLAYER", 512, 128, 1f) {
             @Override
             public void action() {
                 if(DataManager.connected){
@@ -85,6 +89,9 @@ public class MainMenu extends InputAdapter implements Screen {
                     chat.setVisible(true);
                 }else
                     chat.setVisible(false);
+
+                if(!DataManager.connected)
+                    SuperSmashShoot.ms_message.update("You have to connect first");
             }
         };
 
@@ -99,7 +106,11 @@ public class MainMenu extends InputAdapter implements Screen {
         this.sb_stats = new SpriteButton(IDs.STATS, IDs.STATS_DOWN) {
             @Override
             public void action() {
-
+                if(DataManager.connected){
+                    this.dispose();
+                    game.setScreen(new StatsMenu(game));
+                }else
+                    SuperSmashShoot.ms_message.update("You have to connect first");
             }
         };
 
@@ -114,8 +125,11 @@ public class MainMenu extends InputAdapter implements Screen {
         this.sb_friends = new SpriteButton(IDs.FRIENDS, IDs.FRIENDS_DOWN) {
             @Override
             public void action() {
-                this.dispose();
-                game.setScreen(new FriendsMenu(game));
+                if(DataManager.connected){
+                    this.dispose();
+                    game.setScreen(new FriendsMenu(game));
+                }else
+                    SuperSmashShoot.ms_message.update("You have to connect first");
             }
         };
 
@@ -177,6 +191,7 @@ public class MainMenu extends InputAdapter implements Screen {
         Vector3 mousePos = this.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 
         this.game.batch.begin();
+        this.background.draw(this.game.batch);
         this.sb_multiplayer.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.sb_local.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.sb_quit.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
@@ -215,6 +230,7 @@ public class MainMenu extends InputAdapter implements Screen {
 
     @Override
     public void dispose() {
+        this.background.getTexture().dispose();
         this.sb_local.dispose();
         this.sb_multiplayer.dispose();
         this.sb_quit.dispose();
@@ -243,6 +259,8 @@ public class MainMenu extends InputAdapter implements Screen {
             this.chat.execute((int)mousePos.x, (int)mousePos.y);
         if(!this.loggin.isClosed())
             this.loggin.execute((int)mousePos.x, (int)mousePos.y);
+        if(SuperSmashShoot.partyList.getList().size() > 0)
+            SuperSmashShoot.partyList.execute((int)mousePos.x, (int)mousePos.y);
         return false;
     }
 }

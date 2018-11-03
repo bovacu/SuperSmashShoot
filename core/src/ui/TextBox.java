@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import general.Converter;
+import general.DataManager;
 
 public class TextBox extends Sprite implements Ui {
     protected final float FONT_RESIZE = 0.75f;
@@ -22,7 +23,7 @@ public class TextBox extends Sprite implements Ui {
         super(Converter.idToSprite(id));
         super.setSize(width, height);
         super.setPosition(position.x, position.y);
-        this.font = new BitmapFont(Gdx.files.internal("fonts/flipps.fnt"));
+        this.font = new BitmapFont(Gdx.files.internal(DataManager.font));
         this.font.getData().setScale(this.FONT_RESIZE);
         this.selected = false;
         this.canGetLetter = true;

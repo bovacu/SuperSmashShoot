@@ -6,11 +6,13 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.SuperSmashShoot;
+import general.Converter;
 import general.DataManager;
 import general.IDs;
 import ui.*;
@@ -40,6 +42,8 @@ public class FriendsMenu extends InputAdapter implements Screen {
     private final float UPDATE_LIST_TIME = 1f;
     private float timePassed;
 
+    private Sprite background;
+
     public FriendsMenu(SuperSmashShoot game){
         this.game = game;
         this.camera = new OrthographicCamera();
@@ -54,6 +58,9 @@ public class FriendsMenu extends InputAdapter implements Screen {
         this.createBlock4();
         this.createBlock5();
         this.createBackButton();
+
+        this.background = Converter.idToSprite(IDs.BACKGROUND1);
+        this.background.setSize(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT);
 
         Gdx.input.setInputProcessor(this);
     }
@@ -76,7 +83,7 @@ public class FriendsMenu extends InputAdapter implements Screen {
         this.tb_addFriend = new TextBox(IDs.TEXT_BOX, 512, 96, new Vector2(this.lb_addFriend.getPosition().x,
                 this.lb_addFriend.getPosition().y - this.lb_addFriend.getHeight() * 2 - 96), 12);
 
-        this.sb_addFriend = new SpriteButton(IDs.PLUS_BUTTON, IDs.PLUS_BUTTON_DOWN) {
+        this.sb_addFriend = new SpriteButton(IDs.WIFI, IDs.WIFI_DOWN) {
             @Override
             public void action() {
                 if(DataManager.connected) {
@@ -87,7 +94,6 @@ public class FriendsMenu extends InputAdapter implements Screen {
                     SuperSmashShoot.serverSpeaker.setToSend(toSend);
                 } else {
                     SuperSmashShoot.ms_message.update("You need to connect first!");
-                    System.out.println("entra aqui");
                 }
             }
         };
@@ -102,10 +108,18 @@ public class FriendsMenu extends InputAdapter implements Screen {
         this.tb_removeFriend = new TextBox(IDs.TEXT_BOX, 512, 96, new Vector2(this.lb_addFriend.getPosition().x,
                 this.lb_removeFriend.getPosition().y - this.lb_removeFriend.getHeight() * 2 - 96), 12);
 
-        this.sb_removeFriend = new SpriteButton(IDs.MINUS_BUTTON, IDs.MINUS_BUTTON_DOWN) {
+        this.sb_removeFriend = new SpriteButton(IDs.CLOSE, IDs.CLOSE_DOWN) {
             @Override
             public void action() {
+                if(DataManager.connected) {
+                    List<String> toSend = new ArrayList<>();
+                    toSend.add("REMOVE FRIEND");
+                    toSend.add(tb_removeFriend.getInfo());
 
+                    SuperSmashShoot.serverSpeaker.setToSend(toSend);
+                } else {
+                    SuperSmashShoot.ms_message.update("You need to connect first!");
+                }
             }
         };
         this.sb_removeFriend.setPosition(new Vector2(this.tb_removeFriend.getPosition().x + this.tb_removeFriend.getWidth() * 1.1f,
@@ -122,12 +136,15 @@ public class FriendsMenu extends InputAdapter implements Screen {
                 IDs.PAGED_LIST_BACK, IDs.NEXT, IDs.NEXT_DOWN, IDs.PREVIOUS, IDs.PREVIOUS_DOWN) {
             @Override
             public void buttonAction() {
-                List<String> toSend = new ArrayList<>();
-                toSend.add("SEND PARTY INVITATION");
-                toSend.add(DataManager.userName);
-                toSend.add(pl_friendsList.getSelectedItem());
+                if(DataManager.partyID == -1 || DataManager.partyID == Converter.userNameToPartyId()){
+                    List<String> toSend = new ArrayList<>();
+                    toSend.add("SEND PARTY INVITATION");
+                    toSend.add(DataManager.userName);
+                    toSend.add(pl_friendsList.getSelectedItem());
 
-                SuperSmashShoot.serverSpeaker.setToSend(toSend);
+                    SuperSmashShoot.serverSpeaker.setToSend(toSend);
+                }else
+                    SuperSmashShoot.ms_message.update("You can't invite, you are not the host!");
             }
         };
 
@@ -222,6 +239,7 @@ public class FriendsMenu extends InputAdapter implements Screen {
 
         Vector3 mousePos = this.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         this.game.batch.begin();
+        this.background.draw(this.game.batch);
         this.lb_addFriend.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.tb_addFriend.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.sb_addFriend.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
@@ -268,6 +286,7 @@ public class FriendsMenu extends InputAdapter implements Screen {
 
     @Override
     public void dispose() {
+        this.background.getTexture().dispose();
         this.pl_friendsList.dispose();
         this.tb_addFriend.dispose();
         this.tb_removeFriend.dispose();

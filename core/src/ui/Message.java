@@ -25,7 +25,7 @@ public class Message extends Sprite implements Ui {
         super(Converter.idToSprite(id));
         this.text = text;
         this.timePassed = this.LIFE_TIME;
-        this.font = new BitmapFont(Gdx.files.internal("fonts/flipps.fnt"));
+        this.font = new BitmapFont(Gdx.files.internal(DataManager.font));
         this.font.getData().setScale(0.75f);
         this.fontInfo = new GlyphLayout();
     }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import general.Converter;
+import general.DataManager;
 import general.IDs;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public abstract class PagedListWithButton extends Sprite implements Ui{
         this.createNextButton(nextId, nextDownId);
         this.createPreviousButton(prevId, prevDownId);
         this.distanceFromBottomToButtons = (int)(this.previous.getPosition().y - this.getPosition().y);
-        this.font = new BitmapFont(Gdx.files.internal("fonts/flipps.fnt"));
+        this.font = new BitmapFont(Gdx.files.internal(DataManager.font));
         this.font.getData().setScale(this.FONT_RESIZE);
         this.itemHeight = (int)(this.previous.getHeight());
         this.list = new ArrayList<>();
@@ -56,7 +57,7 @@ public abstract class PagedListWithButton extends Sprite implements Ui{
             public void action() {
                 if(selectedPage + 1 < maxPages) {
                     selectedPage++;
-                    updateButtons(itemsToDraw(), IDs.CHECK, IDs.CHECK_DOWN);
+                    updateButtons(itemsToDraw(), IDs.WIFI, IDs.WIFI_DOWN);
                 }
             }
         };
@@ -70,7 +71,7 @@ public abstract class PagedListWithButton extends Sprite implements Ui{
             public void action() {
                 if(selectedPage - 1 >= 0) {
                     selectedPage--;
-                    updateButtons(itemsToDraw(), IDs.CHECK, IDs.CHECK_DOWN);
+                    updateButtons(itemsToDraw(), IDs.WIFI, IDs.WIFI_DOWN);
                 }
             }
         };
@@ -97,14 +98,14 @@ public abstract class PagedListWithButton extends Sprite implements Ui{
         this.list = new ArrayList<>(items);
         this.maxPages = (this.list.size() % this.ITEMS_PER_PAGE == 0) ? this.list.size() / this.ITEMS_PER_PAGE :
                 (this.list.size() / this.ITEMS_PER_PAGE) + 1;
-        this.updateButtons(this.itemsToDraw(), IDs.CHECK, IDs.CHECK_DOWN);
+        this.updateButtons(this.itemsToDraw(), IDs.WIFI, IDs.WIFI_DOWN);
     }
 
     public void addItem(String item){
         this.list.add(item);
         this.maxPages = (this.list.size() % this.ITEMS_PER_PAGE == 0) ? this.list.size() / this.ITEMS_PER_PAGE :
                 (this.list.size() / this.ITEMS_PER_PAGE) + 1;
-        this.updateButtons(this.itemsToDraw(), IDs.CHECK, IDs.CHECK_DOWN);
+        this.updateButtons(this.itemsToDraw(), IDs.WIFI, IDs.WIFI_DOWN);
     }
 
     public Vector2 getPosition(){

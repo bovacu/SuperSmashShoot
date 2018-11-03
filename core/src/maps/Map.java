@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -29,6 +30,8 @@ public class Map implements Screen {
     private Player player;
     private List<Bullet> bullets;
 
+    private Sprite background;
+
     private FrameRate fps;
 
     public Map(SuperSmashShoot game, String mapName){
@@ -39,6 +42,8 @@ public class Map implements Screen {
         this.viewport = new FitViewport(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT, this.camera);
 
         this.tiles = MapParser.getTilesFromFile(mapName);
+        this.background = MapParser.getBackground(mapName);
+        this.background.setSize(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT);
         this.bullets = new ArrayList<>();
         this.player = new Soldier(new Vector2(512, 256));
 
@@ -88,6 +93,7 @@ public class Map implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         this.fps.render();
         this.game.batch.begin();
+        this.background.draw(this.game.batch);
         for(Tile t : this.tiles)
             t.render(this.game.batch);
 
@@ -153,5 +159,7 @@ public class Map implements Screen {
 
         for(Bullet b : this.bullets)
             b.dispose();
+
+        this.background.getTexture().dispose();
     }
 }

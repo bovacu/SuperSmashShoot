@@ -56,7 +56,7 @@ public class SuperSmashShoot extends Game {
 		SuperSmashShoot.partyMembers = new ArrayList<>();
 
 		DataManager.loadData();
-		ms_message = new Message("", IDs.PAGED_LIST_BACK);
+		ms_message = new Message("", IDs.MESSAGE_BACKGROUND);
 		SuperSmashShoot.pool = Executors.newFixedThreadPool(2);
 		SuperSmashShoot.serverSpeaker = new ServerSpeaker();
 		SuperSmashShoot.serverListener = new ServerListener();

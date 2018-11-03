@@ -54,7 +54,7 @@ public class Loggin extends InputAdapter implements Ui {
 
     private void createBlock3(){
         float offset = 40;
-        this.sb_loggIn = new SpriteButton(IDs.CHECK, IDs.CHECK_DOWN) {
+        this.sb_loggIn = new SpriteButton(IDs.WIFI, IDs.WIFI_DOWN) {
             @Override
             public void action() {
                 List<String> toSend = new ArrayList<>();
@@ -71,7 +71,7 @@ public class Loggin extends InputAdapter implements Ui {
 
         //-------------------------------------------------------
 
-        this.sb_close = new SpriteButton(IDs.QUIT, IDs.QUIT_DOWN) {
+        this.sb_close = new SpriteButton(IDs.CLOSE, IDs.CLOSE_DOWN) {
             @Override
             public void action() {
                 closed = true;
@@ -146,9 +146,23 @@ public class Loggin extends InputAdapter implements Ui {
     public boolean keyDown(int key){
         if(!this.closed)
             if(key == Input.Keys.DEL || key == Input.Keys.ENTER || key == Input.Keys.CONTROL_LEFT || key == Input.Keys.CONTROL_RIGHT
-                    || key == Input.Keys.SHIFT_LEFT || key == Input.Keys.SHIFT_RIGHT || key == Input.Keys.ESCAPE || key == Input.Keys.SPACE) {
+                    || key == Input.Keys.SHIFT_LEFT || key == Input.Keys.SHIFT_RIGHT || key == Input.Keys.ESCAPE || key == Input.Keys.SPACE
+            || key == Input.Keys.TAB) {
                 this.tb_user.setCanGetLetter(false);
                 this.tb_password.setCanGetLetter(false);
+
+                if(key == Input.Keys.TAB){
+                    if(this.tb_user.isSelected()){
+                        this.tb_password.selected = true;
+                        this.tb_user.selected = false;
+                    }
+                }
+
+                if(key == Input.Keys.ENTER){
+                    if(this.tb_password.isSelected()){
+                        this.sb_loggIn.action();
+                    }
+                }
 
                 if(key == (Input.Keys.DEL)) {
                     this.tb_user.removeLetter();

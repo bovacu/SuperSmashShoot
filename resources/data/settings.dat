@@ -4,3 +4,4 @@ music:60
 effects:90
 textColor:WHITE
 ui:BROWN
+font:fonts/flipps.fnt

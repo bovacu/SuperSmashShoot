@@ -33,7 +33,9 @@ public class RegularTile extends Tile {
 
     @Override
     public void debug(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(Color.GREEN);
-        shapeRenderer.rect(super.getCollider().x, super.getCollider().y, super.getCollider().width, super.getCollider().height);
+        if(super.getCollider() != null){
+            shapeRenderer.setColor(Color.GREEN);
+            shapeRenderer.rect(super.getCollider().x, super.getCollider().y, super.getCollider().width, super.getCollider().height);
+        }
     }
 }

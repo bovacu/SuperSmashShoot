@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import general.DataManager;
 
 public class Label implements Ui{
     private final float FONT_RESIZE = 0.75f;
@@ -19,7 +20,7 @@ public class Label implements Ui{
     public Label(String text, Vector2 position){
         this.text = text;
         this.position = position;
-        this.font = new BitmapFont(Gdx.files.internal("fonts/flipps.fnt"));
+        this.font = new BitmapFont(Gdx.files.internal(DataManager.font));
         this.font.getData().setScale(this.FONT_RESIZE);
         this.fontInfo = new GlyphLayout();
     }
@@ -27,7 +28,7 @@ public class Label implements Ui{
     public Label(String text, Vector2 position, float size){
         this.text = text;
         this.position = position;
-        this.font = new BitmapFont(Gdx.files.internal("fonts/flipps.fnt"));
+        this.font = new BitmapFont(Gdx.files.internal(DataManager.font));
         this.font.getData().setScale(size);
         this.fontInfo = new GlyphLayout();
     }
@@ -35,7 +36,7 @@ public class Label implements Ui{
     public Label(String text, float size){
         this.text = text;
         this.position = new Vector2();
-        this.font = new BitmapFont(Gdx.files.internal("fonts/flipps.fnt"));
+        this.font = new BitmapFont(Gdx.files.internal(DataManager.font));
         this.font.getData().setScale(size);
         this.fontInfo = new GlyphLayout();
     }

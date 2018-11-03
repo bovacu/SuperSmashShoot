@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.SuperSmashShoot;
 import general.Converter;
+import general.DataManager;
 import general.IDs;
 
 import java.util.ArrayList;
@@ -35,11 +36,11 @@ public class Chat extends InputAdapter implements Ui {
         Chat.scrollShownPointer = Chat.shownPointer;
         this.visible = false;
 
-        this.background = Converter.idToSprite(IDs.PAGED_LIST_BACK);
+        this.background = Converter.idToSprite(IDs.CHAT_BACKGROUND);
         this.background.setSize(WIDTH, HEIGHT);
         this.background.setPosition(chatButton.getPosition().x, chatButton.getPosition().y + chatButton.getSizes().height + 15);
 
-        this.textToRender = new BitmapFont(Gdx.files.internal("fonts/flipps.fnt"));
+        this.textToRender = new BitmapFont(Gdx.files.internal(DataManager.font));
         this.textToRender.getData().markupEnabled = true;
         this.textToRender.getData().setScale(0.6f);
 
@@ -197,12 +198,11 @@ public class Chat extends InputAdapter implements Ui {
     public boolean scrolled(int amount) {
         if(this.visible) {
             String newShown[] = Chat.log.split("\r\n|\r|\n");
-            if(amount > 0 && Chat.scrollShownPointer + amount < Chat.CHAT_MAX_LINES - 3 + Chat.shownPointer){
+
+            if(amount > 0 && Chat.scrollShownPointer + amount < Chat.CHAT_MAX_LINES - 3 + Chat.shownPointer)
                 Chat.scrollShownPointer += amount;
-                System.out.println(Chat.CHAT_MAX_LINES - 3 + Chat.shownPointer + " - " + Chat.scrollShownPointer);
-            }else if(amount < 0 && Chat.scrollShownPointer + amount >= 0){
+            else if(amount < 0 && Chat.scrollShownPointer + amount >= 0)
                 Chat.scrollShownPointer += amount;
-            }
 
             Chat.shown = "";
             int counter = 0;
@@ -215,28 +215,5 @@ public class Chat extends InputAdapter implements Ui {
             }
         }
         return false;
-    }
-
-    public static String transformMessageToFit(String user, String message){
-        String aux = user + ": " + message;
-
-        if(aux.length() >= Chat.CHAT_LENGTH){
-            int splits = aux.length() / Chat.CHAT_LENGTH;
-            int lastI = 0;
-            String newMessage = "";
-            for(int i = 0; i < splits; i++){
-                newMessage += aux.substring(i * Chat.CHAT_LENGTH, i * Chat.CHAT_LENGTH + Chat.CHAT_LENGTH) + "\n";
-                lastI = i;
-            }
-
-            if(aux.length() % Chat.CHAT_LENGTH != 0) {
-                newMessage += aux.substring(lastI * Chat.CHAT_LENGTH + Chat.CHAT_LENGTH) + "\n\n";
-            } else
-                newMessage += "\n";
-
-            return newMessage;
-        }else{
-            return aux;
-        }
     }
 }

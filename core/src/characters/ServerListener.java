@@ -1,6 +1,7 @@
 package characters;
 
 import com.mygdx.game.SuperSmashShoot;
+import general.DataManager;
 import ui.Chat;
 
 import java.io.DataInputStream;
@@ -22,7 +23,10 @@ public class ServerListener extends Thread {
                                         "INVITATION RECEIVED",          //2
                                         "UPDATE PARTY",                 //3
                                         "NEW FRIEND",                   //4
-                                        "RECEIVE MESSAGE"               //5
+                                        "RECEIVE MESSAGE",              //5
+                                        "ACCEPTED FRIEND REQUEST",      //6
+                                        "MEMBER LEFT",                  //7
+                                        "REMOVED"                       //8
     };
 
     public ServerListener(){
@@ -30,7 +34,7 @@ public class ServerListener extends Thread {
         this.stop = false;
 
         try {
-            this.socket = new Socket("192.168.1.40", SuperSmashShoot.PORT);
+            this.socket = new Socket("localhost", SuperSmashShoot.PORT);
             this.input = new DataInputStream(this.socket.getInputStream());
             this.output = new DataOutputStream(this.socket.getOutputStream());
         } catch (IOException e) {
@@ -80,6 +84,28 @@ public class ServerListener extends Thread {
                     SuperSmashShoot.ms_message.update("new message from " + sender.split("]")[1]
                             .replaceAll("\\[", "").replaceAll("]", ""));
                     Chat.addNewMessage(sender, message);
+                }
+
+                else if(this.COMMANDS[6].equals(request)){
+                    String newFriend = this.input.readLine();
+                    SuperSmashShoot.ms_message.update(newFriend + " is now your friend");
+                    this.updateLists();
+                }
+
+                else if(this.COMMANDS[7].equals(request)){
+                    String left = this.input.readLine();
+                    SuperSmashShoot.ms_message.update(left + " has left the party");
+                    SuperSmashShoot.partyList.getList().remove(left);
+
+                    if(SuperSmashShoot.partyList.getList().size() == 0){
+                        List<String> toSend = new ArrayList<>();
+                        toSend.add("LEAVE PARTY");
+                        SuperSmashShoot.serverSpeaker.setToSend(toSend);
+                    }
+                }
+
+                else if(this.COMMANDS[8].equals(request)){
+                    this.updateLists();
                 }
 
             }catch (IOException e){
