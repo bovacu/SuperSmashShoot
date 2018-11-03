@@ -1,0 +1,21 @@
+w:1600
+h:1152
+b:199
+[x     x     x     x     x     r:268 r:269 x     x     x     x     x     x     x     r:253 x     x     x     x     x     r:253 x     x     x     x]
+[x     x     x     x     x     r:268 r:269 x     x     x     x     x     x     x     r:252 x     x     x     x     x     r:253 x     x     x     x]
+[x     x     x     x     x     r:268 r:269 x     x     x     x     x     x     x     r:251 x     x     x     x     x     r:253 x     x     x     x]
+[x     x     x     x     x     r:268 r:269 x     x     x     x     x     x     r:248 r:249 r:250 x     x     x     x     r:253 x     x     x     x]
+[x     x     x     x     x     r:266 r:267 x     x     x     x     x     x     r:246 x     r:247 x     x     x     x     r:253 x     x     x     x]
+[x     x     x     x     x     r:264 r:265 x     x     x     x     x     x     r:228 r:229 r:230 x     x     x     x     r:253 x     x     x     x]
+[x     x     x     r:258 r:260 r:262 r:263 r:261 r:259 x     x     x     x     r:231 r:232 r:233 x     x     x     x     r:252 x     x     x     x]
+[x     x     r:254 r:256 x     x     x     x     r:257 r:255 x     x     x     r:234 r:235 r:236 x     x     x     x     r:251 x     x     x     x]
+[x     x     r:270 r:271 r:272 r:273 r:274 r:275 r:276 r:277 x     x     x     x     x     x     x     x     x     r:248 r:249 r:250 x     x     x]
+[x     x     r:278 r:279 r:280 r:281 r:282 r:283 r:284 r:285 x     x     x     x     x     x     x     x     x     r:246 x     r:247 x     x     x]
+[x     x     r:286 r:287 r:288 r:289 r:290 r:291 r:292 r:293 x     x     x     x     x     x     x     x     x     r:237 r:238 r:239 x     x     x]
+[x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     r:240 r:241 r:242 x     x     x]
+[x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     r:243 r:244 r:245 x     x     x]
+[x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x     x]
+[r:208 x     x     r:208 x     x     x     x     x     x     x     r:219 r:220 r:221 x     x     x     x     x     x     x     x     x     x     x]
+[r:209 r:212 r:211 r:213 x     x     x     x 	 x     x     x     r:222 r:223 r:224 x     x     x     x     x     x     x     x     r:204 r:205 x]
+[r:214 r:217 r:216 r:218 x     r:203 x     x     x     x     x     r:225 r:226 r:227 x     x     x     x     x     x     x     x     r:206 r:207 x]
+[r:200 r:201 r:201 r:201 r:201 r:201 r:202 x     x     r:200 r:201 r:201 r:201 r:201 r:201 r:202 x     x     r:200 r:201 r:201 r:201 r:201 r:201 r:202]
