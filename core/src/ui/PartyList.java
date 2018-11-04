@@ -52,6 +52,11 @@ public class PartyList extends Sprite implements Ui {
                 super.getY() - this.sb_leave.getSizes().height * 1.5f));
     }
 
+    public void updateColors(){
+        this.lb_title.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
+        this.font.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
+    }
+
     public void addItem(String item){
         if(this.list.size() < this.ITEMS_PER_PAGE)
             this.list.add(item);

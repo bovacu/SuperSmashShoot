@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -79,6 +80,7 @@ public class FriendsMenu extends InputAdapter implements Screen {
     private void createBlock1(){
         this.lb_addFriend = new Label("Add friend", new Vector2(new Vector2(15,
                 SuperSmashShoot.SCREEN_HEIGHT)));
+        this.lb_addFriend.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.tb_addFriend = new TextBox(IDs.TEXT_BOX, 512, 96, new Vector2(this.lb_addFriend.getPosition().x,
                 this.lb_addFriend.getPosition().y - this.lb_addFriend.getHeight() * 2 - 96), 12);
@@ -104,6 +106,7 @@ public class FriendsMenu extends InputAdapter implements Screen {
     private void createBlock2(){
         this.lb_removeFriend = new Label("Remove Friend", new Vector2(new Vector2(this.lb_addFriend.getPosition().x,
                 this.tb_addFriend.getPosition().y - this.lb_addFriend.getHeight())));
+        this.lb_removeFriend.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.tb_removeFriend = new TextBox(IDs.TEXT_BOX, 512, 96, new Vector2(this.lb_addFriend.getPosition().x,
                 this.lb_removeFriend.getPosition().y - this.lb_removeFriend.getHeight() * 2 - 96), 12);
@@ -129,6 +132,7 @@ public class FriendsMenu extends InputAdapter implements Screen {
     private void createBlock3(){
         this.lb_friendList = new Label("Friends list", new Vector2(new Vector2(this.lb_addFriend.getPosition().x,
                 this.tb_removeFriend.getPosition().y - this.lb_addFriend.getHeight())));
+        this.lb_friendList.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.pl_friendsList = new PagedListWithButton(512, 512,
                 new Vector2(this.lb_addFriend.getPosition().x, this.lb_friendList.getPosition().y
@@ -148,6 +152,8 @@ public class FriendsMenu extends InputAdapter implements Screen {
             }
         };
 
+        this.pl_friendsList.setTextColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
+
         if(DataManager.connected) {
             List<String> friends = SuperSmashShoot.serverSpeaker.getFriendsList();
             for(String friend : friends)
@@ -159,6 +165,7 @@ public class FriendsMenu extends InputAdapter implements Screen {
         this.lb_friendRequests = new Label("Friend requests", new Vector2(new Vector2(
                 this.pl_friendsList.getPosition().x + this.pl_friendsList.getWidth() * 1.1f,
                 this.lb_friendList.getPosition().y)));
+        this.lb_friendRequests.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.pl_friendRequests = new PagedListWithButton(512, 512,
                 new Vector2(this.lb_friendRequests.getPosition().x, this.pl_friendsList.getPosition().y),
@@ -173,6 +180,8 @@ public class FriendsMenu extends InputAdapter implements Screen {
             }
         };
 
+        this.pl_friendRequests.setTextColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
+
         if(DataManager.connected) {
             List<String> friendsRequest = SuperSmashShoot.serverSpeaker.getRequestsList();
             for(String request : friendsRequest)
@@ -184,6 +193,7 @@ public class FriendsMenu extends InputAdapter implements Screen {
         this.lb_partyRequests = new Label("Party requests", new Vector2(new Vector2(
                 this.pl_friendRequests.getPosition().x + this.pl_friendsList.getWidth() * 1.1f,
                 this.lb_friendList.getPosition().y)));
+        this.lb_partyRequests.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.pl_partyRequests = new PagedListWithButton(512, 512,
                 new Vector2(this.lb_partyRequests.getPosition().x, this.pl_friendsList.getPosition().y),
@@ -201,6 +211,8 @@ public class FriendsMenu extends InputAdapter implements Screen {
                     SuperSmashShoot.ms_message.update("You are already in a party");
             }
         };
+
+        this.pl_partyRequests.setTextColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         if(DataManager.connected) {
             List<String> party = SuperSmashShoot.serverSpeaker.getPartyList();

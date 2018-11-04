@@ -15,6 +15,7 @@ public class Converter {
     private static final String KNIGHT1         = "graphics/knightAxe/";
     private static final String PIRATE1         = "graphics/gunPirate/";
     private static final String UI              = "graphics/ui/";
+    private static final String CC              = "graphics/characterSelector/";
 
     public static Sprite idToSprite(int id){
         switch (id){
@@ -261,6 +262,27 @@ public class Converter {
             case IDs.SKY_TREE_13 :              return new Sprite(new Texture(MAP_3_TILES + "tree13.png"));
             case IDs.SKY_TREE_14 :              return new Sprite(new Texture(MAP_3_TILES + "tree14.png"));
             case IDs.SKY_BACKGROUND :           return new Sprite(new Texture(MAP_3_TILES + "background.png"));
+
+            case IDs.CC_BACKGROUND :            return new Sprite(new Texture(CC + "background.png"));
+            case IDs.CC_DECORATION :            return new Sprite(new Texture(CC + "decoration1.png"));
+            case IDs.CC_CLOWN_PICTURE :         return new Sprite(new Texture(CC + "clownPicture.png"));
+            case IDs.CC_PIRATE_PICTURE :        return new Sprite(new Texture(CC + "piratePicture.png"));
+            case IDs.CC_KNIGHT_PICTURE :        return new Sprite(new Texture(CC + "knightPicture.png"));
+            case IDs.CC_SOLDIER_PICTURE :       return new Sprite(new Texture(CC + "soldierPicture.png"));
+            case IDs.CC_CLOWN_PICTURE_DOWN :    return new Sprite(new Texture(CC + "clownPictureDown.png"));
+            case IDs.CC_PIRATE_PICTURE_DOWN :   return new Sprite(new Texture(CC + "piratePictureDown.png"));
+            case IDs.CC_KNIGHT_PICTURE_DOWN :   return new Sprite(new Texture(CC + "knightPictureDown.png"));
+            case IDs.CC_SOLDIER_PICTURE_DOWN :  return new Sprite(new Texture(CC + "soldierPictureDown.png"));
+            case IDs.CC_PIRATE_1_WALKING :      return new Sprite(new Texture(CC + "pirate1Walking.png"));
+            case IDs.CC_SOLDIER_1_WALKING :     return new Sprite(new Texture(CC + "soldier1Walking.png"));
+            case IDs.CC_SOLDIER_2_WALKING :     return new Sprite(new Texture(CC + "soldier2Walking.png"));
+            case IDs.CC_SOLDIER_3_WALKING :     return new Sprite(new Texture(CC + "soldier3Walking.png"));
+            case IDs.CC_CLOWN_1_WALKING :       return new Sprite(new Texture(CC + "clown1Walking.png"));
+            case IDs.CC_CLOWN_2_WALKING :       return new Sprite(new Texture(CC + "clown2Walking.png"));
+            case IDs.CC_CLOWN_3_WALKING :       return new Sprite(new Texture(CC + "clown3Walking.png"));
+            case IDs.CC_KNIGHT_1_WALKING:       return new Sprite(new Texture(CC + "knight1Walking.png"));
+            case IDs.CC_KNIGHT_2_WALKING:       return new Sprite(new Texture(CC + "knight2Walking.png"));
+            case IDs.CC_KNIGHT_3_WALKING:       return new Sprite(new Texture(CC + "knight3Walking.png"));
 
             case IDs.GUN :                      return new Sprite(new Texture(SOLDIER + "gun.png"));
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -19,10 +20,6 @@ import maps.Map;
 import ui.*;
 
 public class MainMenu extends InputAdapter implements Screen {
-
-    static {
-        DataManager.loadData();
-    }
 
     private SuperSmashShoot game;
 
@@ -65,21 +62,28 @@ public class MainMenu extends InputAdapter implements Screen {
         this.sb_local = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN,"LOCAL", 512, 128, 1f) {
             @Override
             public void action() {
-                this.dispose();
-                game.setScreen(new Map(game, "port.txt"));
+                if(DataManager.partyID == -1 || DataManager.partyID == Converter.userNameToPartyId()){
+                    this.dispose();
+                    game.setScreen(new Map(game, "port.txt"));
+                }else
+                    SuperSmashShoot.ms_message.update("You are not the host of the party");
             }
         };
+
+        ((SpriteTextButton)this.sb_local).setTextColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.sb_multiplayer = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "MULTIPLAYER", 512, 128, 1f) {
             @Override
             public void action() {
-                if(DataManager.connected){
+                if(DataManager.connected && (DataManager.partyID == -1 || DataManager.partyID == Converter.userNameToPartyId())){
                     this.dispose();
                     game.setScreen(new MultiplayerOptionMenu(game));
                 }else
                     SuperSmashShoot.ms_message.update("You have to connect first!");
             }
         };
+
+        ((SpriteTextButton)this.sb_multiplayer).setTextColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.sb_chat = new SpriteButton(IDs.CHAT, IDs.CHAT_DOWN) {
             @Override
@@ -137,6 +141,8 @@ public class MainMenu extends InputAdapter implements Screen {
             @Override
             public void action() {
                 if(!DataManager.connected && loggin.isClosed()){
+                    loggin.updateColors();
+                    chat.updateColors();
                     chat.setVisible(false);
                     loggin.setClosed(false);
                 }else

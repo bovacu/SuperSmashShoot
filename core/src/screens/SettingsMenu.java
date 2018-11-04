@@ -266,6 +266,8 @@ public class SettingsMenu extends InputAdapter implements Screen {
             @Override
             public void action() {
                 DataManager.writeData();
+                SuperSmashShoot.ms_message.setTextColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
+                SuperSmashShoot.partyList.updateColors();
             }
         };
         this.sb_apply.setPosition(new Vector2(SuperSmashShoot.SCREEN_WIDTH - this.sb_apply.getWidth() - offset,
@@ -313,6 +315,8 @@ public class SettingsMenu extends InputAdapter implements Screen {
 
         this.sb_back.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.sb_apply.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
+
+        SuperSmashShoot.ms_message.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
 
         this.game.batch.end();
     }

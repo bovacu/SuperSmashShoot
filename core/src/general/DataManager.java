@@ -64,6 +64,10 @@ public class DataManager {
             line = line.replace(line.split(":")[1], uiColor);
             lines.add(line);
 
+            line = br.readLine();
+            line = line.replace(line.split(":")[1], font);
+            lines.add(line);
+
             fr.close();
             br.close();
 

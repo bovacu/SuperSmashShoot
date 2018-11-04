@@ -1,6 +1,7 @@
 package ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,6 +22,10 @@ public abstract class SpriteTextButton extends SpriteButton {
         this.font.getData().setScale(fontSize);
         this.fontInfo = new GlyphLayout();
         this.fontInfo.setText(this.font, this.text);
+    }
+
+    public void setTextColor(Color color){
+        this.font.setColor(color);
     }
 
     @Override

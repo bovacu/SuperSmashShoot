@@ -8,16 +8,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import general.DataManager;
 import general.IDs;
-import maps.Map;
 import screens.MainMenu;
-import ui.Chat;
 import ui.Message;
 import ui.PartyList;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -32,7 +26,6 @@ public class SuperSmashShoot extends Game {
 	public static int SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT;
 	public static final int PORT = 6868;
-	private Map map;
 	private MainMenu mainMenu;
 
     public static Message ms_message;
@@ -77,7 +70,6 @@ public class SuperSmashShoot extends Game {
 	
 	@Override
 	public void dispose () {
-		//this.map.dispose();
 		this.mainMenu.dispose();
 		this.batch.dispose();
 		this.debugger.dispose();

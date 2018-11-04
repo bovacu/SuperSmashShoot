@@ -3,6 +3,7 @@ package ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -73,6 +74,11 @@ public class Chat extends InputAdapter implements Ui {
 
     public boolean isVisible(){
         return this.visible;
+    }
+
+    public void updateColors(){
+        this.tb_messages.setTextColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
+        this.textToRender.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
     }
 
     @Override

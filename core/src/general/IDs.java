@@ -273,8 +273,32 @@ public class IDs {
     public static final int SKY_TREE_14                 = 334;
     public static final int SKY_BACKGROUND              = 335;
 
+    /**-------------- CHOOSE CHARACTER --------------------**/
 
-    public static final int GUN                         = 350;
+    public static final int CC_DECORATION               = 336;
+    public static final int CC_CLOWN_PICTURE            = 337;
+    public static final int CC_KNIGHT_PICTURE           = 338;
+    public static final int CC_PIRATE_PICTURE           = 339;
+    public static final int CC_SOLDIER_PICTURE          = 340;
+    public static final int CC_CLOWN_PICTURE_DOWN       = 341;
+    public static final int CC_KNIGHT_PICTURE_DOWN      = 342;
+    public static final int CC_PIRATE_PICTURE_DOWN      = 343;
+    public static final int CC_SOLDIER_PICTURE_DOWN     = 344;
+    public static final int CC_BACKGROUND               = 345;
+    public static final int CC_SOLDIER_1_WALKING        = 346;
+    public static final int CC_SOLDIER_2_WALKING        = 347;
+    public static final int CC_SOLDIER_3_WALKING        = 348;
+    public static final int CC_PIRATE_1_WALKING         = 349;
+    public static final int CC_PIRATE_2_WALKING         = 350;
+    public static final int CC_PIRATE_3_WALKING         = 351;
+    public static final int CC_CLOWN_1_WALKING          = 352;
+    public static final int CC_CLOWN_2_WALKING          = 353;
+    public static final int CC_CLOWN_3_WALKING          = 354;
+    public static final int CC_KNIGHT_1_WALKING         = 355;
+    public static final int CC_KNIGHT_2_WALKING         = 356;
+    public static final int CC_KNIGHT_3_WALKING         = 357;
+
+    public static final int GUN                         = 400;
 
     public static final int DEFAULT                     = 1000;
 

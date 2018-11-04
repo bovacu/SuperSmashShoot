@@ -3,11 +3,13 @@ package ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.SuperSmashShoot;
 import general.Converter;
+import general.DataManager;
 import general.IDs;
 
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public class Loggin extends InputAdapter implements Ui {
         final int TB_W = 360;
         final int TB_H = 96;
         this.lb_user = new Label("USER", 1f);
+
         this.lb_user.setPosition(new Vector2(this.background.getX() + this.background.getWidth() / 2f - this.lb_user.getWidth() / 2f,
                 this.background.getY() + this.background.getHeight() - this.lb_user.getHeight() / 1.5f));
         this.tb_user = new TextBox(IDs.TEXT_BOX, TB_W, TB_H, new Vector2(this.background.getX() + this.background.getWidth() / 2f - TB_W / 2f,
@@ -46,6 +49,7 @@ public class Loggin extends InputAdapter implements Ui {
         final int TB_W = 360;
         final int TB_H = 96;
         this.lb_password = new Label("PASSWORD", 1f);
+
         this.lb_password.setPosition(new Vector2(this.background.getX() + this.background.getWidth() / 2f - this.lb_password.getWidth() / 2f,
                 this.tb_user.getPosition().y - this.lb_user.getHeight() / 1.5f));
         this.tb_password = new TextBoxPassword(IDs.TEXT_BOX, TB_W, TB_H, new Vector2(this.tb_user.getPosition().x,
@@ -97,6 +101,13 @@ public class Loggin extends InputAdapter implements Ui {
 
         this.sb_register.setPosition(new Vector2(this.background.getX() + offset,
                 this.sb_loggIn.getPosition().y));
+    }
+
+    public void updateColors(){
+        this.lb_user.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
+        this.lb_password.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
+        this.tb_password.setTextColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
+        this.tb_user.setTextColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
     }
 
     public boolean isClosed(){

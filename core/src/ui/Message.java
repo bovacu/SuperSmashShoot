@@ -13,7 +13,7 @@ import general.DataManager;
 public class Message extends Sprite implements Ui {
 
     private final float LIFE_TIME = 4f;
-    private final Color COLOR = Color.valueOf(DataManager.colorToHex(DataManager.textColor));
+    private Color color = Color.valueOf(DataManager.colorToHex(DataManager.textColor));
 
     private BitmapFont font;
     private GlyphLayout fontInfo;
@@ -46,15 +46,20 @@ public class Message extends Sprite implements Ui {
     }
 
     public void update(String text){
+        this.color = Color.valueOf(DataManager.colorToHex(DataManager.textColor));
         float offset = 15;
         super.setAlpha(0);
-        this.font.setColor(this.COLOR.r, this.COLOR.g, this.COLOR.b, 0);
+        this.font.setColor(this.color.r, this.color.g, this.color.b, 0);
         this.timePassed = 0;
         this.text = text;
         this.fontInfo.setText(this.font, this.text);
         super.setSize(this.fontInfo.width + 2 * this.fontInfo.height, 2 * this.fontInfo.height);
         super.setPosition(SuperSmashShoot.SCREEN_WIDTH / 2f - super.getWidth() / 2f,
                 SuperSmashShoot.SCREEN_HEIGHT - super.getHeight() - offset);
+    }
+
+    public void setTextColor(Color color){
+        this.font.setColor(color);
     }
 
     @Override

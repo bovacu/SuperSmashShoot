@@ -1,6 +1,7 @@
 package ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -50,6 +51,10 @@ public class TextBox extends Sprite implements Ui {
             this.info = this.info.substring(0, this.info.length() - 1);
             this.updateShown();
         }
+    }
+
+    public void setTextColor(Color color){
+        this.font.setColor(color);
     }
 
     public String getInfo(){

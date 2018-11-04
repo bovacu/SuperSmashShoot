@@ -145,6 +145,10 @@ public abstract class PagedListWithButton extends Sprite implements Ui{
         }
     }
 
+    public void setTextColor(Color color){
+        this.font.setColor(color);
+    }
+
     public abstract void buttonAction();
 
     @Override

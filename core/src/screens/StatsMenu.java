@@ -3,6 +3,7 @@ package screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -12,9 +13,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.SuperSmashShoot;
 import general.Converter;
+import general.DataManager;
 import general.IDs;
 import ui.Label;
 import ui.SpriteButton;
+import ui.SpriteTextButton;
 
 import java.util.List;
 
@@ -42,18 +45,23 @@ public class StatsMenu extends InputAdapter implements Screen {
 
         this.lb_matches = new Label("Number of match played:           " + data.get(0), new Vector2(SuperSmashShoot.SCREEN_WIDTH / 4f,
                 SuperSmashShoot.SCREEN_HEIGHT * 0.95f));
+        this.lb_matches.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.lb_wins = new Label("Total of wins:                             " + data.get(1), new Vector2(SuperSmashShoot.SCREEN_WIDTH / 4f,
                 SuperSmashShoot.SCREEN_HEIGHT * 0.75f));
+        this.lb_wins.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.lb_looses = new Label("Total of looses:                         " + data.get(2), new Vector2(SuperSmashShoot.SCREEN_WIDTH / 4f,
                 SuperSmashShoot.SCREEN_HEIGHT * 0.55f));
+        this.lb_looses.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.lb_doneDamage = new Label("Total damage done:                    " + data.get(3), new Vector2(SuperSmashShoot.SCREEN_WIDTH / 4f,
                 SuperSmashShoot.SCREEN_HEIGHT * 0.35f));
+        this.lb_doneDamage.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.lb_receivedDamage = new Label("Total damage done:                    " + data.get(4), new Vector2(SuperSmashShoot.SCREEN_WIDTH / 4f,
                 SuperSmashShoot.SCREEN_HEIGHT * 0.15f));
+        this.lb_receivedDamage.setColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.sb_back = new SpriteButton(IDs.PREVIOUS, IDs.PREVIOUS_DOWN) {
             @Override

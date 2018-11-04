@@ -3,6 +3,7 @@ package screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.SuperSmashShoot;
 import general.Converter;
+import general.DataManager;
 import general.IDs;
 import ui.SpriteButton;
 import ui.SpriteTextButton;
@@ -23,7 +25,7 @@ public class MultiplayerOptionMenu extends InputAdapter implements Screen {
     private OrthographicCamera camera;
     private Viewport viewport;
 
-    private SpriteButton sb_createMatch, sb_joinMatch, sb_back;
+    private SpriteButton sb_searchMatch, sb_customMatch, sb_back;
 
     private Sprite background;
 
@@ -44,19 +46,24 @@ public class MultiplayerOptionMenu extends InputAdapter implements Screen {
     }
 
     private void createButtons(){
-        this.sb_createMatch = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "CREATE MATCH", 512, 128, 1f) {
+        this.sb_searchMatch = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "SEARCH MATCH", 512, 128, 1f) {
             @Override
             public void action() {
 
             }
         };
 
-        this.sb_joinMatch = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "JOIN MATCH", 512, 128, 1f) {
+        ((SpriteTextButton)this.sb_searchMatch).setTextColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
+
+        this.sb_customMatch = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "CUSTOM MATCH", 512, 128, 1f) {
             @Override
             public void action() {
-
+                this.dispose();
+                game.setScreen(new CharacterSelection(game));
             }
         };
+
+        ((SpriteTextButton)this.sb_customMatch).setTextColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
 
         this.sb_back = new SpriteButton(IDs.PREVIOUS, IDs.PREVIOUS_DOWN) {
             @Override
@@ -69,11 +76,11 @@ public class MultiplayerOptionMenu extends InputAdapter implements Screen {
 
     private void setButtons(){
         float offset = 15f;
-        this.sb_createMatch.setCenterPosition(new Vector2(SuperSmashShoot.SCREEN_WIDTH / 2f,
-                SuperSmashShoot.SCREEN_HEIGHT / 2f + this.sb_createMatch.getHeight()));
+        this.sb_searchMatch.setCenterPosition(new Vector2(SuperSmashShoot.SCREEN_WIDTH / 2f,
+                SuperSmashShoot.SCREEN_HEIGHT / 2f + this.sb_searchMatch.getHeight()));
 
-        this.sb_joinMatch.setCenterPosition(new Vector2(this.sb_createMatch.getCenterPosition().x,
-                SuperSmashShoot.SCREEN_HEIGHT / 2f - this.sb_joinMatch.getHeight()));
+        this.sb_customMatch.setCenterPosition(new Vector2(this.sb_searchMatch.getCenterPosition().x,
+                SuperSmashShoot.SCREEN_HEIGHT / 2f - this.sb_customMatch.getHeight()));
 
         this.sb_back.setPosition(new Vector2(offset, offset));
     }
@@ -95,8 +102,8 @@ public class MultiplayerOptionMenu extends InputAdapter implements Screen {
 
         this.game.batch.begin();
         this.background.draw(this.game.batch);
-        this.sb_createMatch.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
-        this.sb_joinMatch.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
+        this.sb_searchMatch.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
+        this.sb_customMatch.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.sb_back.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.game.batch.end();
     }
@@ -124,16 +131,16 @@ public class MultiplayerOptionMenu extends InputAdapter implements Screen {
     @Override
     public void dispose() {
         this.background.getTexture().dispose();
-        this.sb_createMatch.dispose();
-        this.sb_joinMatch.dispose();
+        this.sb_searchMatch.dispose();
+        this.sb_customMatch.dispose();
         this.sb_back.dispose();
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button){
         Vector3 mousePos = this.camera.unproject(new Vector3(screenX, screenY, 0));
-        this.sb_createMatch.execute((int)mousePos.x, (int)mousePos.y);
-        this.sb_joinMatch.execute((int)mousePos.x, (int)mousePos.y);
+        this.sb_searchMatch.execute((int)mousePos.x, (int)mousePos.y);
+        this.sb_customMatch.execute((int)mousePos.x, (int)mousePos.y);
         this.sb_back.execute((int)mousePos.x, (int)mousePos.y);
         return false;
     }
