@@ -298,6 +298,11 @@ public class IDs {
     public static final int CC_KNIGHT_2_WALKING         = 356;
     public static final int CC_KNIGHT_3_WALKING         = 357;
 
+    public static final int CM_PORT                     = 370;
+    public static final int CM_PORT_DOWN                = 371;
+    public static final int CM_SKY                      = 372;
+    public static final int CM_SKY_DOWN                 = 373;
+
     public static final int GUN                         = 400;
 
     public static final int DEFAULT                     = 1000;

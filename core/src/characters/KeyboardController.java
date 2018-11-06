@@ -65,15 +65,26 @@ public class KeyboardController extends InputAdapter {
         if(screenX >= this.player.getPosition().x + Player.PLAYER_WH / 2f) {
             if (this.player.animationController.isFlipX()) {
                 this.player.animationController.flipAnimation();
+
                 this.player.getWeapon().flip(false, true);
-            }this.player.setAimDirection(1);
+            }
+            this.player.setAimDirection(1);
+
+            if(SuperSmashShoot.serverSpeaker.pdp != null)
+                SuperSmashShoot.serverSpeaker.pdp.setAimDirection(1);
         }else {
             if (!this.player.animationController.isFlipX()) {
                 this.player.animationController.flipAnimation();
                 this.player.getWeapon().flip(false, true);
             }
             this.player.setAimDirection(-1);
+
+            if(SuperSmashShoot.serverSpeaker.pdp != null)
+                SuperSmashShoot.serverSpeaker.pdp.setAimDirection(-1);
         }
+
+        if(SuperSmashShoot.serverSpeaker.pdp != null)
+            SuperSmashShoot.serverSpeaker.pdp.setFlipAnim(this.player.animationController.isFlipX());
 
         int mouseX = screenX;
         int mouseY = SuperSmashShoot.SCREEN_HEIGHT - screenY;

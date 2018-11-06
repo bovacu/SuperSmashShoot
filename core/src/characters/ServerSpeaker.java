@@ -1,12 +1,12 @@
 package characters;
 
 import com.mygdx.game.SuperSmashShoot;
+import general.Converter;
 import general.DataManager;
+import general.IDs;
 import ui.Chat;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,10 @@ public class ServerSpeaker extends Thread {
                                             "PARTY LEFT",                   //22
                                             "SENDING STATS LIST",           //23
                                             "FRIEND REMOVED",               //24
-                                            "FRIEND REMOVE ERROR"           //25
+                                            "FRIEND REMOVE ERROR",          //25
+                                            "OK",                           //26
+                                            "START FIGHT",                  //27
+                                            "SEND PLAYER DATA PACKAGE"      //28
     };
 
     private Socket socket;
@@ -48,6 +51,8 @@ public class ServerSpeaker extends Thread {
     private List<String> toSend;
 
     private List<String> friendsList, requestsList, partyList, statsList;
+
+    public PlayerDataPackage pdp;
 
     public ServerSpeaker(){
         super.setDaemon(true);
@@ -169,12 +174,41 @@ public class ServerSpeaker extends Thread {
                             this.output.writeBytes(this.toSend.get(1) + "\r\n");
                             this.output.flush();
                             break;
+                        case "LOAD CHARACTER SELECTOR" :
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            for(String friend : SuperSmashShoot.partyList.getList())
+                                this.output.writeBytes(friend + "\r\n");
+                            this.output.writeBytes("END" + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "LOAD MAP SELECTOR":
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            for(String friend : SuperSmashShoot.partyList.getList())
+                                this.output.writeBytes(friend + "\r\n");
+                            this.output.writeBytes("END" + "\r\n");
+                            this.output.flush();
+                            break;
+                        case "START FIGHT" :
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.writeBytes(this.toSend.get(1) + "\r\n");
+                            this.output.flush();
+                            DataManager.playing = true;
+                            break;
+                        case "SEND PLAYER DATA PACKAGE" :
+                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
+                            this.output.writeBytes(this.pdp.getUsr() + "\r\n");
+                            this.output.writeBytes(String.valueOf(this.pdp.getPosition()[0]) + "\r\n");
+                            this.output.writeBytes(String.valueOf(this.pdp.getPosition()[1]) + "\r\n");
+                            this.output.writeBytes(this.pdp.getAnim() + "\r\n");
+                            this.output.writeBytes(String.valueOf(this.pdp.isFlipAnim()) + "\r\n");
+                            this.output.flush();
+                            break;
                     }
 
 
 
                     String response = this.input.readLine();
-                    System.out.println("SERVER_SPEAKER: " + response);
+                    //System.out.println("SERVER_SPEAKER: " + response);
 
 
 
@@ -265,6 +299,7 @@ public class ServerSpeaker extends Thread {
                         }
 
                         else if(response.equals(this.RESPONSES[13])){
+                            DataManager.partyID = Converter.userNameToPartyId();
                             this.resetToSend();
                         }
 
@@ -344,6 +379,31 @@ public class ServerSpeaker extends Thread {
                             this.resetToSend();
                         }
 
+                        else if(response.equals(this.RESPONSES[26])){
+                            this.resetToSend();
+                        }
+
+                        else if(response.equals(this.RESPONSES[27])){
+                            if(this.pdp == null){
+                                this.pdp = new PlayerDataPackage(IDs.SOLDIER_IDLE, DataManager.userName);
+                                System.out.println("crea el pdp como host");
+                            }
+
+                            List<String> toSend = new ArrayList<>();
+                            toSend.add("SEND PLAYER DATA PACKAGE");
+                            this.toSend = new ArrayList<>(toSend);
+                        }
+
+                        else if(response.equals(this.RESPONSES[28])){
+                            if(DataManager.playing){
+                                List<String> toSend = new ArrayList<>();
+                                toSend.add("SEND PLAYER DATA PACKAGE");
+                                this.toSend = new ArrayList<>(toSend);
+                            }else{
+                                this.resetToSend();
+                            }
+                        }
+
 
                 } catch (IOException e) {
                    e.printStackTrace();
@@ -351,7 +411,7 @@ public class ServerSpeaker extends Thread {
             }
 
             try {
-                Thread.sleep(500);
+                Thread.sleep(5);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

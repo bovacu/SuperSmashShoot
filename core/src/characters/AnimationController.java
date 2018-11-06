@@ -72,6 +72,22 @@ public class AnimationController {
                 this.gameObject.getSprite().getX(), this.gameObject.getSprite().getY(), size, size);
     }
 
+    public int getX(){
+        return this.activeAnimation.getKeyFrame(this.animationTimes.get(this.indexOfAnimation)).getRegionX();
+    }
+
+    public int getY(){
+        return this.activeAnimation.getKeyFrame(this.animationTimes.get(this.indexOfAnimation)).getRegionY();
+    }
+
+    public int getWidth(){
+        return Player.PLAYER_WH;
+    }
+
+    public int getHeight(){
+        return Player.PLAYER_WH;
+    }
+
     private Animation<TextureRegion> createAnimation(int id, int frames, float time, Animation.PlayMode playMode){
         Animation<TextureRegion> animation;
         Texture sheet = Converter.idToSprite(id).getTexture();

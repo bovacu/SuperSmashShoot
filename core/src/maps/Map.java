@@ -1,5 +1,6 @@
 package maps;
 
+import characters.GhostPlayer;
 import characters.Player;
 import characters.Soldier;
 import characters.bullets.Bullet;
@@ -28,6 +29,7 @@ public class Map implements Screen {
 
     private List<Tile> tiles;
     private Player player;
+    private List<GhostPlayer> ghostPlayers;
     private List<Bullet> bullets;
 
     private Sprite background;
@@ -36,7 +38,6 @@ public class Map implements Screen {
 
     public Map(SuperSmashShoot game, String mapName){
         this.game = game;
-
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT);
         this.viewport = new FitViewport(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT, this.camera);
@@ -47,7 +48,15 @@ public class Map implements Screen {
         this.bullets = new ArrayList<>();
         this.player = new Soldier(new Vector2(512, 256));
 
+        this.ghostPlayers = new ArrayList<>();
+
+        for(int i = 0; i < SuperSmashShoot.serverListener.pdpList.size(); i ++)
+            this.ghostPlayers.add(new GhostPlayer(SuperSmashShoot.serverListener.pdpList.get(i).getId(),
+                    SuperSmashShoot.serverListener.pdpList.get(i).getUsr()));
+
         this.fps = new FrameRate(this.player);
+        SuperSmashShoot.serverListener.resetLoadMapF();
+        SuperSmashShoot.serverListener.resetMapF();
     }
 
     @Override
@@ -65,6 +74,9 @@ public class Map implements Screen {
 
         this.player.applyPhysics();
         this.player.applyCollisions(this.tiles);
+
+        for(GhostPlayer ghostPlayer : this.ghostPlayers)
+            ghostPlayer.update();
 
         for(Bullet b : this.bullets) {
             b.move();
@@ -99,6 +111,9 @@ public class Map implements Screen {
 
         for(Bullet b : this.bullets)
             b.render(this.game.batch);
+
+        for(GhostPlayer ghostPlayer : this.ghostPlayers)
+            ghostPlayer.render(this.game.batch);
 
         this.player.render(this.game.batch);
         this.game.batch.end();

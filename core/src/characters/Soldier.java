@@ -6,10 +6,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.SuperSmashShoot;
+import general.DataManager;
 import general.IDs;
 import maps.Items;
 import tiles.Tile;
@@ -19,11 +23,17 @@ import java.util.List;
 public class Soldier extends Player {
 
     private final String ANIMATION_NAMES[] = {"IDLE", "WALK"};
+    private BitmapFont font;
+    private GlyphLayout fontInfo;
 
     public Soldier(Vector2 position) {
         super(IDs.SOLDIER_IDLE, position, new Vector2(Player.PLAYER_WH, Player.PLAYER_WH));
         this.addController();
         this.createAnimationController();
+        this.font = new BitmapFont(Gdx.files.internal(DataManager.font));
+        this.font.getData().setScale(0.75f);
+        this.fontInfo = new GlyphLayout();
+        this.fontInfo.setText(this.font, DataManager.userName);
     }
 
     private void addController(){
@@ -177,12 +187,17 @@ public class Soldier extends Player {
         super.getWeapon().setPosition(super.getSprite().getX(), super.getSprite().getY());
 
         this.manageAnimationStates();
+
+        SuperSmashShoot.serverSpeaker.pdp.update(new int[]{(int)super.getSprite().getX(), (int)super.getSprite().getY()},
+                super.animationController.getCurrentAnimationName());
     }
 
     @Override
     public void render(SpriteBatch batch) {
         super.animationController.play(batch, Player.PLAYER_WH);
         super.getWeapon().draw(batch);
+        this.font.draw(batch, DataManager.userName, super.getSprite().getX() + super.getSprite().getWidth() / 2f - this.fontInfo.width / 2f,
+                super.getSprite().getY() + super.getSprite().getHeight() * 1.5f);
     }
 
     @Override

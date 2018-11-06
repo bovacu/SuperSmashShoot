@@ -16,6 +16,7 @@ public class Converter {
     private static final String PIRATE1         = "graphics/gunPirate/";
     private static final String UI              = "graphics/ui/";
     private static final String CC              = "graphics/characterSelector/";
+    private static final String CM              = "graphics/mapSelector/";
 
     public static Sprite idToSprite(int id){
         switch (id){
@@ -274,6 +275,8 @@ public class Converter {
             case IDs.CC_KNIGHT_PICTURE_DOWN :   return new Sprite(new Texture(CC + "knightPictureDown.png"));
             case IDs.CC_SOLDIER_PICTURE_DOWN :  return new Sprite(new Texture(CC + "soldierPictureDown.png"));
             case IDs.CC_PIRATE_1_WALKING :      return new Sprite(new Texture(CC + "pirate1Walking.png"));
+            case IDs.CC_PIRATE_2_WALKING :      return new Sprite(new Texture(CC + "pirate2Walking.png"));
+            case IDs.CC_PIRATE_3_WALKING :      return new Sprite(new Texture(CC + "pirate3Walking.png"));
             case IDs.CC_SOLDIER_1_WALKING :     return new Sprite(new Texture(CC + "soldier1Walking.png"));
             case IDs.CC_SOLDIER_2_WALKING :     return new Sprite(new Texture(CC + "soldier2Walking.png"));
             case IDs.CC_SOLDIER_3_WALKING :     return new Sprite(new Texture(CC + "soldier3Walking.png"));
@@ -283,6 +286,11 @@ public class Converter {
             case IDs.CC_KNIGHT_1_WALKING:       return new Sprite(new Texture(CC + "knight1Walking.png"));
             case IDs.CC_KNIGHT_2_WALKING:       return new Sprite(new Texture(CC + "knight2Walking.png"));
             case IDs.CC_KNIGHT_3_WALKING:       return new Sprite(new Texture(CC + "knight3Walking.png"));
+
+            case IDs.CM_PORT :                  return new Sprite(new Texture(CM + "portMap.png"));
+            case IDs.CM_PORT_DOWN :             return new Sprite(new Texture(CM + "portMapDown.png"));
+            case IDs.CM_SKY :                   return new Sprite(new Texture(CM + "skyMap.png"));
+            case IDs.CM_SKY_DOWN :              return new Sprite(new Texture(CM + "skyMapDown.png"));
 
             case IDs.GUN :                      return new Sprite(new Texture(SOLDIER + "gun.png"));
 

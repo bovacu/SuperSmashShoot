@@ -20,6 +20,9 @@ import ui.Label;
 import ui.SpriteButton;
 import ui.SpriteTextButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CharacterSelection extends InputAdapter implements Screen {
 
     private final String CHARACTERS[] = {"KNIGHT", "PIRATE", "CLOWN", "SOLDIER"};
@@ -52,6 +55,7 @@ public class CharacterSelection extends InputAdapter implements Screen {
         this.createBlock3();
 
         Gdx.input.setInputProcessor(this);
+        SuperSmashShoot.serverListener.resetLoadCharacterSelectorF();
     }
 
     private void createBlock1(){
@@ -115,45 +119,42 @@ public class CharacterSelection extends InputAdapter implements Screen {
         this.sb_custom1 = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "1", 64, 64, 1f) {
             @Override
             public void action() {
-                if(chosenCharacter.equals(CHARACTERS[0])){
+                if(chosenCharacter.equals(CHARACTERS[0]))
                     createAnimation(IDs.CC_KNIGHT_1_WALKING);
-                } else if(chosenCharacter.equals(CHARACTERS[1])){
-
-                } else if(chosenCharacter.equals(CHARACTERS[2])){
+                else if(chosenCharacter.equals(CHARACTERS[1]))
+                    createAnimation(IDs.CC_PIRATE_1_WALKING);
+                else if(chosenCharacter.equals(CHARACTERS[2]))
                     createAnimation(IDs.CC_CLOWN_1_WALKING);
-                } else if(chosenCharacter.equals(CHARACTERS[3])){
+                else if(chosenCharacter.equals(CHARACTERS[3]))
                     createAnimation(IDs.CC_SOLDIER_1_WALKING);
-                }
             }
         };
 
         this.sb_custom2 = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "2", 64, 64, 1f) {
             @Override
             public void action() {
-                if(chosenCharacter.equals(CHARACTERS[0])){
+                if(chosenCharacter.equals(CHARACTERS[0]))
                     createAnimation(IDs.CC_KNIGHT_2_WALKING);
-                } else if(chosenCharacter.equals(CHARACTERS[1])){
-
-                } else if(chosenCharacter.equals(CHARACTERS[2])){
+                else if(chosenCharacter.equals(CHARACTERS[1]))
+                    createAnimation(IDs.CC_PIRATE_2_WALKING);
+                else if(chosenCharacter.equals(CHARACTERS[2]))
                     createAnimation(IDs.CC_CLOWN_2_WALKING);
-                } else if(chosenCharacter.equals(CHARACTERS[3])){
+                else if(chosenCharacter.equals(CHARACTERS[3]))
                     createAnimation(IDs.CC_SOLDIER_2_WALKING);
-                }
             }
         };
 
         this.sb_custom3 = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "3", 64, 64, 1f) {
             @Override
             public void action() {
-                if(chosenCharacter.equals(CHARACTERS[0])){
+                if(chosenCharacter.equals(CHARACTERS[0]))
                     createAnimation(IDs.CC_KNIGHT_3_WALKING);
-                } else if(chosenCharacter.equals(CHARACTERS[1])){
-
-                } else if(chosenCharacter.equals(CHARACTERS[2])){
+                else if(chosenCharacter.equals(CHARACTERS[1]))
+                    createAnimation(IDs.CC_PIRATE_3_WALKING);
+                else if(chosenCharacter.equals(CHARACTERS[2]))
                     createAnimation(IDs.CC_CLOWN_3_WALKING);
-                } else if(chosenCharacter.equals(CHARACTERS[3])){
+                else if(chosenCharacter.equals(CHARACTERS[3]))
                     createAnimation(IDs.CC_SOLDIER_3_WALKING);
-                }
             }
         };
 
@@ -163,14 +164,16 @@ public class CharacterSelection extends InputAdapter implements Screen {
         this.sb_custom3.setPosition(new Vector2(this.sb_custom2.getPosition().x + this.sb_custom2.getSizes().width + offset,
                 this.sb_custom2.getPosition().y));
 
-        this.lb_costumes = new Label("Customes", new Vector2(this.sb_custom1.getPosition().x,
+        this.lb_costumes = new Label("Customs", new Vector2(this.sb_custom1.getPosition().x,
                 this.sb_custom1.getPosition().y + this.sb_custom1.getSizes().height * 2 + offset), 1f);
 
         this.sb_ok = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "FIGHT", 172, 64, 1f) {
             @Override
             public void action() {
                 if(chosenCharacter != null){
-
+                    List<String> toSend = new ArrayList<>();
+                    toSend.add("LOAD MAP SELECTOR");
+                    SuperSmashShoot.serverSpeaker.setToSend(toSend);
                 }else
                     SuperSmashShoot.ms_message.update("You have to select a character first");
             }
@@ -241,6 +244,11 @@ public class CharacterSelection extends InputAdapter implements Screen {
         SuperSmashShoot.ms_message.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
 
         this.game.batch.end();
+
+        if(SuperSmashShoot.serverListener.getLoadMapSelectorF()){
+            this.dispose();
+            this.game.setScreen(new MapSelector(this.game));
+        }
     }
 
     @Override

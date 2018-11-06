@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import general.DataManager;
 import general.IDs;
+import screens.CharacterSelection;
 import screens.MainMenu;
 import ui.Message;
 import ui.PartyList;
@@ -52,7 +53,7 @@ public class SuperSmashShoot extends Game {
 		ms_message = new Message("", IDs.MESSAGE_BACKGROUND);
 		SuperSmashShoot.pool = Executors.newFixedThreadPool(2);
 		SuperSmashShoot.serverSpeaker = new ServerSpeaker();
-		SuperSmashShoot.serverListener = new ServerListener();
+		SuperSmashShoot.serverListener = new ServerListener(this);
 		SuperSmashShoot.pool.execute(SuperSmashShoot.serverSpeaker);
 		SuperSmashShoot.pool.execute(SuperSmashShoot.serverListener);
 

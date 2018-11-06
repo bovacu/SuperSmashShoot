@@ -18,6 +18,9 @@ import general.IDs;
 import ui.SpriteButton;
 import ui.SpriteTextButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MultiplayerOptionMenu extends InputAdapter implements Screen {
 
     private SuperSmashShoot game;
@@ -58,6 +61,13 @@ public class MultiplayerOptionMenu extends InputAdapter implements Screen {
         this.sb_customMatch = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "CUSTOM MATCH", 512, 128, 1f) {
             @Override
             public void action() {
+                System.out.println("HOST: " + DataManager.partyID);
+                if(DataManager.partyID != -1){
+                    List<String> toSend = new ArrayList<>();
+                    toSend.add("LOAD CHARACTER SELECTOR");
+
+                    SuperSmashShoot.serverSpeaker.setToSend(toSend);
+                }
                 this.dispose();
                 game.setScreen(new CharacterSelection(game));
             }

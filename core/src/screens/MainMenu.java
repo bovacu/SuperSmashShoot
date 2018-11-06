@@ -212,6 +212,11 @@ public class MainMenu extends InputAdapter implements Screen {
         this.chat.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.loggin.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.game.batch.end();
+
+        if(SuperSmashShoot.serverListener.getLoadCharacterSelectorF()) {
+            this.dispose();
+            this.game.setScreen(new CharacterSelection(this.game));
+        }
     }
 
     @Override

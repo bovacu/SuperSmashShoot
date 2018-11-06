@@ -15,7 +15,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class Player extends GameObject implements Serializable {
+public abstract class Player extends GameObject{
 
     public static final int PLAYER_WH = 64;
     public static float GRAVITY = -15f;
@@ -164,12 +164,4 @@ public abstract class Player extends GameObject implements Serializable {
     public abstract void move();
     public abstract void interactWithBullet(List<Bullet> bulletList);
     public abstract void interactWithItems(List<Items> itemsList);
-
-    public void sendData(OutputStream stream){
-
-    }
-
-    public void receiveData(InputStream stream){
-
-    }
 }
