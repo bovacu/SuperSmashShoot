@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.SuperSmashShoot;
 import general.DataManager;
 import general.FrameRate;
+import general.IDs;
 import screens.CharacterSelection;
 import tiles.Tile;
 
@@ -50,7 +51,14 @@ public class Map implements Screen {
         this.background = MapParser.getBackground(mapName);
         this.background.setSize(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT);
 
-        this.player = new Soldier(new Vector2(512, 256), CharacterSelection.skin);
+        if(CharacterSelection.chosenCharacter == IDs.CharacterType.SOLDIER)
+            this.player = new Soldier(new Vector2(512, 256), CharacterSelection.skin);
+        else if(CharacterSelection.chosenCharacter == IDs.CharacterType.KNIGHT)
+            System.err.println("Knight not implemented yet");
+        else if(CharacterSelection.chosenCharacter == IDs.CharacterType.CLOWN)
+            System.err.println("Clown not implemented yet");
+        else if(CharacterSelection.chosenCharacter == IDs.CharacterType.PIRATE)
+            System.err.println("Pirate not implemented yet");
 
         for(int i = 0; i < SuperSmashShoot.serverListener.pdpList.size(); i ++) {
             for(PlayerDataPackage pdp : SuperSmashShoot.serverListener.pdpList){
