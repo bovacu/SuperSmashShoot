@@ -1,6 +1,7 @@
 package characters;
 
 import characters.bullets.Bullet;
+import characters.bullets.GhostBullet;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -24,12 +25,12 @@ public abstract class Player extends GameObject{
 
     private Rectangle collider[];
 
-    private int damagePercentage;
+    private int live;
     private boolean alive;
 
     private float walkSpeed;
-    protected float jumpSpeed;
-    protected float yVelocity;
+    float jumpSpeed;
+    float yVelocity;
     private boolean canJump;
     private boolean canMove;
     private boolean canShoot;
@@ -38,7 +39,7 @@ public abstract class Player extends GameObject{
     private int aimDirection;
     private boolean applyGravity;
 
-    protected AnimationController animationController;
+    AnimationController animationController;
 
     private Vector2 clickPosition;
 
@@ -47,7 +48,7 @@ public abstract class Player extends GameObject{
     public Player(int id, Vector2 position, Vector2 size) {
         super(id, position, size);
         this.collider = Converter.gameObjectToPlayerCollider(this);
-        this.damagePercentage = 0;
+        this.live = 5;
         this.alive = true;
         this.canJump = true;
         this.jumping = false;
@@ -65,24 +66,16 @@ public abstract class Player extends GameObject{
         this.clickPosition = new Vector2();
     }
 
+    public int getLife() {
+        return live;
+    }
+
+    public void setLive(int live) {
+        this.live = live;
+    }
+
     Rectangle[] getColliders(){
         return this.collider;
-    }
-
-    public int getDamagePercentage(){
-        return this.damagePercentage;
-    }
-
-    public boolean isAlive(){
-        return this.alive;
-    }
-
-    public void increaseDamagePercentage(int amount){
-        this.damagePercentage += amount;
-    }
-
-    public void resetDamagePercentage(){
-        this.damagePercentage = 0;
     }
 
     void setCanMove(boolean canMove){
@@ -163,5 +156,6 @@ public abstract class Player extends GameObject{
     public abstract void jump();
     public abstract void move();
     public abstract void interactWithBullet(List<Bullet> bulletList);
+    public abstract void interactWithGhostBullet(List<GhostBullet> ghostBulletList);
     public abstract void interactWithItems(List<Items> itemsList);
 }

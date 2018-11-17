@@ -1,13 +1,17 @@
 package characters;
 
+import characters.bullets.Bullet;
+import characters.bullets.GunBullet;
 import com.mygdx.game.SuperSmashShoot;
 import general.Converter;
 import general.DataManager;
 import general.IDs;
+import maps.Map;
+import screens.CharacterSelection;
 import ui.Chat;
 
 import java.io.*;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +49,9 @@ public class ServerSpeaker extends Thread {
     };
 
     private Socket socket;
+    private DatagramSocket udp;
+    private DatagramPacket udpPacket;
+    private byte message[];
     private DataInputStream input;
     private DataOutputStream output;
     private boolean stop;
@@ -52,9 +59,11 @@ public class ServerSpeaker extends Thread {
 
     private List<String> friendsList, requestsList, partyList, statsList;
 
-    public PlayerDataPackage pdp;
+    public static PlayerDataPackage pdp;
+    public static String HOST;
+    public static String response;
 
-    public ServerSpeaker(){
+    public ServerSpeaker(String host){
         super.setDaemon(true);
         this.toSend = new ArrayList<>();
         this.requestsList = new ArrayList<>();
@@ -63,11 +72,17 @@ public class ServerSpeaker extends Thread {
         this.statsList = new ArrayList<>();
         this.toSend.add("NAN");
         this.stop = false;
+        ServerSpeaker.HOST = host;
 
         try {
-            this.socket = new Socket("localhost", SuperSmashShoot.PORT);
+            this.socket = new Socket(host, SuperSmashShoot.PORT);
             this.input = new DataInputStream(this.socket.getInputStream());
             this.output = new DataOutputStream(this.socket.getOutputStream());
+
+            this.message = new byte[1024];
+
+            this.udp = new DatagramSocket();
+            this.udpPacket = new DatagramPacket(this.message, this.message.length, InetAddress.getByName(host), 6866);
         } catch (IOException e) {
             SuperSmashShoot.ms_message.update("Couldn't connect to server, restart game");
             e.printStackTrace();
@@ -87,7 +102,10 @@ public class ServerSpeaker extends Thread {
 
     @Override
     public void run() {
+        response = "";
+
         while(true){
+            //System.out.println("working");
             if(!this.toSend.get(0).equals("NAN") && this.socket.isConnected()){
                 try {
                     switch (this.toSend.get(0)) {
@@ -95,6 +113,8 @@ public class ServerSpeaker extends Thread {
                             this.output.writeBytes(this.toSend.get(0) + "\r\n");
                             this.output.writeBytes(this.toSend.get(1) + "\r\n");
                             this.output.writeBytes(this.toSend.get(2) + "\r\n");
+                            this.output.writeBytes(this.socket.getLocalAddress().getHostAddress() + "\r\n");
+                            this.output.writeBytes(String.valueOf(ServerListener.udpPort) + "\r\n");
                             this.output.flush();
                             break;
                         case "CLOSE":
@@ -176,15 +196,20 @@ public class ServerSpeaker extends Thread {
                             break;
                         case "LOAD CHARACTER SELECTOR" :
                             this.output.writeBytes(this.toSend.get(0) + "\r\n");
-                            for(String friend : SuperSmashShoot.partyList.getList())
+                            for(String friend : SuperSmashShoot.partyList.getList()) {
                                 this.output.writeBytes(friend + "\r\n");
+                            }
                             this.output.writeBytes("END" + "\r\n");
                             this.output.flush();
                             break;
                         case "LOAD MAP SELECTOR":
                             this.output.writeBytes(this.toSend.get(0) + "\r\n");
-                            for(String friend : SuperSmashShoot.partyList.getList())
+                            this.output.writeBytes(CharacterSelection.chosenCharacter.toString() + "\r\n");
+                            this.output.writeBytes(String.valueOf(CharacterSelection.skin) + "\r\n");
+                            this.output.writeBytes((DataManager.partyID == Converter.userNameToPartyId()) ? "IS HOST" + "\r\n" : "NOT HOST" + "\r\n");
+                            for(String friend : SuperSmashShoot.partyList.getList()) {
                                 this.output.writeBytes(friend + "\r\n");
+                            }
                             this.output.writeBytes("END" + "\r\n");
                             this.output.flush();
                             break;
@@ -192,27 +217,47 @@ public class ServerSpeaker extends Thread {
                             this.output.writeBytes(this.toSend.get(0) + "\r\n");
                             this.output.writeBytes(this.toSend.get(1) + "\r\n");
                             this.output.flush();
-                            DataManager.playing = true;
                             break;
                         case "SEND PLAYER DATA PACKAGE" :
-                            this.output.writeBytes(this.toSend.get(0) + "\r\n");
-                            this.output.writeBytes(this.pdp.getUsr() + "\r\n");
-                            this.output.writeBytes(String.valueOf(this.pdp.getPosition()[0]) + "\r\n");
-                            this.output.writeBytes(String.valueOf(this.pdp.getPosition()[1]) + "\r\n");
-                            this.output.writeBytes(this.pdp.getAnim() + "\r\n");
-                            this.output.writeBytes(String.valueOf(this.pdp.isFlipAnim()) + "\r\n");
-                            this.output.flush();
+                            if(ServerListener.startUdpPackages){
+                                String packet = this.toSend.get(0) + ":" + ServerSpeaker.pdp.getUsr() + ":" + String.valueOf(ServerSpeaker.pdp.getPosition()[0])
+                                        + ":" + String.valueOf(ServerSpeaker.pdp.getPosition()[1]) + ":" + ServerSpeaker.pdp.getAnim() + ":" +
+                                        (String.valueOf((ServerSpeaker.pdp.isFlipAnim()) ? "1" : "0"));
+
+                                for(GhostPlayer gp : Map.ghostPlayers){
+                                    packet += ":USER|" + gp.getUsr() + "|" + gp.getLife();
+                                }
+
+                                /**--------------------- TCP VERSION ----------------------**/
+//                            this.output.writeBytes(packet + "\r\n");
+//                            this.output.flush();
+
+                                /**--------------------- UDP VERSION ---------------------**/
+                                try{
+                                    List<Bullet> bullets = Map.bullets;
+                                    for(Bullet b : bullets){
+                                        String bulletPacket = ":BULLET:" + DataManager.userName + ":" + (int)b.getSprite().getX() + ":" + (int)b.getSprite().getY() + ":"
+                                                + GunBullet.bulletID;
+                                        packet += bulletPacket;
+                                    }
+                                }catch (NullPointerException e){}
+
+                                this.udpPacket.setData(packet.getBytes(), 0, packet.getBytes().length);
+                                this.udp.send(this.udpPacket);
+                            }
+
                             break;
                     }
 
 
-
-                    String response = this.input.readLine();
+                    if(!DataManager.playing && !response.equals("STOP TCP")){
+                        response = this.input.readLine();
+                    }
                     //System.out.println("SERVER_SPEAKER: " + response);
 
 
 
-                    if(response != null)
+                    if(response != null && !response.equals("STOP TCP"))
                         if(response.equals(this.RESPONSES[0])){
                             String friendName = this.input.readLine();
                             SuperSmashShoot.ms_message.update(friendName + " has invited you to a party");
@@ -245,6 +290,7 @@ public class ServerSpeaker extends Thread {
                             List<String> toSend = new ArrayList<>();
                             toSend.add("FRIEND LIST");
                             this.toSend = new ArrayList<>(toSend);
+                            System.out.println("player: " + DataManager.userName + " on port " + ServerListener.udpPort);
                         }
 
                         else if(response.equals(this.RESPONSES[5])){
@@ -384,14 +430,15 @@ public class ServerSpeaker extends Thread {
                         }
 
                         else if(response.equals(this.RESPONSES[27])){
-                            if(this.pdp == null){
-                                this.pdp = new PlayerDataPackage(IDs.SOLDIER_IDLE, DataManager.userName);
-                                System.out.println("crea el pdp como host");
+                            if(ServerSpeaker.pdp == null){
+                                ServerSpeaker.pdp = new PlayerDataPackage(CharacterSelection.chosenCharacter, CharacterSelection.skin,DataManager.userName);
                             }
 
                             List<String> toSend = new ArrayList<>();
                             toSend.add("SEND PLAYER DATA PACKAGE");
                             this.toSend = new ArrayList<>(toSend);
+                            response = "STOP TCP";
+                            DataManager.playing = true;
                         }
 
                         else if(response.equals(this.RESPONSES[28])){
@@ -403,15 +450,13 @@ public class ServerSpeaker extends Thread {
                                 this.resetToSend();
                             }
                         }
-
-
                 } catch (IOException e) {
                    e.printStackTrace();
                 }
             }
 
             try {
-                Thread.sleep(5);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -421,6 +466,7 @@ public class ServerSpeaker extends Thread {
             this.input.close();
             this.output.close();
             this.socket.close();
+            this.udp.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

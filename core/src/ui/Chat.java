@@ -168,6 +168,7 @@ public class Chat extends InputAdapter implements Ui {
 
     @Override
     public boolean keyDown(int key){
+
         if(this.visible)
             if(key == Input.Keys.DEL || key == Input.Keys.CONTROL_LEFT || key == Input.Keys.CONTROL_RIGHT
                     || key == Input.Keys.SHIFT_LEFT || key == Input.Keys.SHIFT_RIGHT || key == Input.Keys.ESCAPE

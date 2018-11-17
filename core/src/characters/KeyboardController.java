@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.SuperSmashShoot;
+import maps.Map;
 
 public class KeyboardController extends InputAdapter {
 
@@ -17,36 +18,53 @@ public class KeyboardController extends InputAdapter {
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == Input.Keys.SPACE && this.player.isCanJump()) {
-            this.player.setCanJump(false);
-            this.player.setJumping(true);
-        } else if(keycode == Input.Keys.D) {
-            this.player.setMoveDirection(1);
-            this.player.setCanMove(true);
+        if(player.getLife() > 0){
+            if(keycode == Input.Keys.SPACE && this.player.isCanJump()) {
+                this.player.setCanJump(false);
+                this.player.setJumping(true);
+            } else if(keycode == Input.Keys.D) {
+                this.player.setMoveDirection(1);
+                this.player.setCanMove(true);
 
-        }else if(keycode == Input.Keys.A) {
-            this.player.setMoveDirection(-1);
-            this.player.setCanMove(true);
+            }else if(keycode == Input.Keys.A) {
+                this.player.setMoveDirection(-1);
+                this.player.setCanMove(true);
 
+            }
         }
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        if(keycode == Input.Keys.SPACE && this.player.isJumping())
-            this.player.setJumping(false);
-        else if(keycode == Input.Keys.D && !Gdx.input.isKeyPressed(Input.Keys.A))
-            this.player.setCanMove(false);
-        else if(keycode == Input.Keys.A && !Gdx.input.isKeyPressed(Input.Keys.D))
-            this.player.setCanMove(false);
+        if(player.getLife() > 0){
+            if(keycode == Input.Keys.SPACE && this.player.isJumping())
+                this.player.setJumping(false);
+            else if(keycode == Input.Keys.D && !Gdx.input.isKeyPressed(Input.Keys.A))
+                this.player.setCanMove(false);
+            else if(keycode == Input.Keys.A && !Gdx.input.isKeyPressed(Input.Keys.D))
+                this.player.setCanMove(false);
+        }
+
+        if(keycode == Input.Keys.F9 && !Map.showDebugging)
+            Map.showDebugging = true;
+        else if(keycode == Input.Keys.F9)
+            Map.showDebugging = false;
+
+        if(keycode == Input.Keys.F10 && !Map.showFps)
+            Map.showFps = true;
+        else if(keycode == Input.Keys.F10)
+            Map.showFps = false;
+
         return false;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        this.player.setCanShoot(true);
-        this.player.setClickPosition(new Vector2(screenX, SuperSmashShoot.SCREEN_HEIGHT - screenY));
+        if(player.getLife() > 0){
+            this.player.setCanShoot(true);
+            this.player.setClickPosition(new Vector2(screenX, SuperSmashShoot.SCREEN_HEIGHT - screenY));
+        }
         return false;
     }
 
@@ -70,8 +88,8 @@ public class KeyboardController extends InputAdapter {
             }
             this.player.setAimDirection(1);
 
-            if(SuperSmashShoot.serverSpeaker.pdp != null)
-                SuperSmashShoot.serverSpeaker.pdp.setAimDirection(1);
+            if(ServerSpeaker.pdp != null)
+                ServerSpeaker.pdp.setAimDirection(1);
         }else {
             if (!this.player.animationController.isFlipX()) {
                 this.player.animationController.flipAnimation();
@@ -79,12 +97,12 @@ public class KeyboardController extends InputAdapter {
             }
             this.player.setAimDirection(-1);
 
-            if(SuperSmashShoot.serverSpeaker.pdp != null)
-                SuperSmashShoot.serverSpeaker.pdp.setAimDirection(-1);
+            if(ServerSpeaker.pdp != null)
+                ServerSpeaker.pdp.setAimDirection(-1);
         }
 
-        if(SuperSmashShoot.serverSpeaker.pdp != null)
-            SuperSmashShoot.serverSpeaker.pdp.setFlipAnim(this.player.animationController.isFlipX());
+        if(ServerSpeaker.pdp != null)
+            ServerSpeaker.pdp.setFlipAnim(this.player.animationController.isFlipX());
 
         int mouseX = screenX;
         int mouseY = SuperSmashShoot.SCREEN_HEIGHT - screenY;

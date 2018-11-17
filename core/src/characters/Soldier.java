@@ -1,6 +1,7 @@
 package characters;
 
 import characters.bullets.Bullet;
+import characters.bullets.GhostBullet;
 import characters.bullets.GunBullet;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controllers;
@@ -12,7 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.SuperSmashShoot;
+import general.Converter;
 import general.DataManager;
 import general.IDs;
 import maps.Items;
@@ -22,45 +23,49 @@ import java.util.List;
 
 public class Soldier extends Player {
 
-    private final String ANIMATION_NAMES[] = {"IDLE", "WALK"};
+    private final String ANIMATION_NAMES[] = {"IDLE", "WALK", "DYING"};
     private BitmapFont font;
     private GlyphLayout fontInfo;
+    private HealthBar healthBar;
+    private int skin;
 
-    public Soldier(Vector2 position) {
-        super(IDs.SOLDIER_IDLE, position, new Vector2(Player.PLAYER_WH, Player.PLAYER_WH));
+    public Soldier(Vector2 position, int skin) {
+        super(Converter.soldierSkinToIdle(skin), position, new Vector2(Player.PLAYER_WH, Player.PLAYER_WH));
+        this.skin = skin;
         this.addController();
         this.createAnimationController();
         this.font = new BitmapFont(Gdx.files.internal(DataManager.font));
-        this.font.getData().setScale(0.75f);
+        this.font.getData().setScale(0.55f);
         this.fontInfo = new GlyphLayout();
         this.fontInfo.setText(this.font, DataManager.userName);
+        this.healthBar = new HealthBar(this);
     }
 
     private void addController(){
         if(Controllers.getControllers().size > 0){
             Controllers.addListener(new XboxController(this));
-            System.out.println("con mando");
         }else{
             Gdx.input.setInputProcessor(new KeyboardController(this));
-            System.out.println("sin mando");
         }
     }
 
     private void createAnimationController(){
-        int ids[]                   = {IDs.SOLDIER_IDLE, IDs.SOLDIER_WALKING};
-        int frames[]                = {2, 4};
-        float times[]               = {0.3f, 0.2f};
-        Animation.PlayMode modes[]  = {Animation.PlayMode.LOOP, Animation.PlayMode.LOOP};
+        int ids[]                   = Converter.soldierSkinToAnimationsIds(this.skin);
+        int frames[]                = {2, 4, 5};
+        float times[]               = {0.3f, 0.2f, 0.15f};
+        Animation.PlayMode modes[]  = {Animation.PlayMode.LOOP, Animation.PlayMode.LOOP, Animation.PlayMode.NORMAL};
 
         super.animationController = new AnimationController(this, this.ANIMATION_NAMES, ids, frames, times, modes);
     }
 
     private void manageAnimationStates(){
-        if(super.isCanMove() && !super.animationController.getCurrentAnimationName().equals(this.ANIMATION_NAMES[1]))
+        if(super.isCanMove() && !super.animationController.getCurrentAnimationName().equals(this.ANIMATION_NAMES[1]) && super.getLife() > 0)
             super.animationController.changeAnimationTo(this.ANIMATION_NAMES[1]);
-        else if(!super.isCanMove() && !super.animationController.getCurrentAnimationName().equals(this.ANIMATION_NAMES[0]))
+        else if(!super.isCanMove() && !super.animationController.getCurrentAnimationName().equals(this.ANIMATION_NAMES[0]) && super.getLife() > 0)
             super.animationController.changeAnimationTo(this.ANIMATION_NAMES[0]);
-
+        else if(!super.animationController.getCurrentAnimationName().equals(this.ANIMATION_NAMES[2]) && super.getLife() <= 0){
+            super.animationController.changeAnimationTo(this.ANIMATION_NAMES[2]);
+        }
     }
 
     @Override
@@ -166,6 +171,11 @@ public class Soldier extends Player {
     }
 
     @Override
+    public void interactWithGhostBullet(List<GhostBullet> bulletList) {
+
+    }
+
+    @Override
     public void interactWithItems(List<Items> itemsList) {
 
     }
@@ -188,16 +198,20 @@ public class Soldier extends Player {
 
         this.manageAnimationStates();
 
-        SuperSmashShoot.serverSpeaker.pdp.update(new int[]{(int)super.getSprite().getX(), (int)super.getSprite().getY()},
+        ServerSpeaker.pdp.update(new int[]{(int)super.getSprite().getX(), (int)super.getSprite().getY()},
                 super.animationController.getCurrentAnimationName());
+
+        super.setLive(ServerSpeaker.pdp.getLife());
     }
 
     @Override
     public void render(SpriteBatch batch) {
         super.animationController.play(batch, Player.PLAYER_WH);
-        super.getWeapon().draw(batch);
+        if(super.getLife() > 0)
+            super.getWeapon().draw(batch);
+        this.healthBar.render(batch);
         this.font.draw(batch, DataManager.userName, super.getSprite().getX() + super.getSprite().getWidth() / 2f - this.fontInfo.width / 2f,
-                super.getSprite().getY() + super.getSprite().getHeight() * 1.5f);
+                this.healthBar.getPosition().y + this.healthBar.getSize().height * 3f);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package characters.bullets;
 
 import characters.AnimationController;
+import characters.GhostPlayer;
 import characters.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -9,13 +10,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.SuperSmashShoot;
 import general.IDs;
 import tiles.Tile;
 
 import java.util.List;
 
 public class GunBullet extends Bullet{
+
+    public static int bulletID = 0;
 
     public static final int WH = 32;
     private final float SPEED = 600;
@@ -39,6 +41,8 @@ public class GunBullet extends Bullet{
         this.delta = Gdx.graphics.getDeltaTime();
         super.getSprite().setPosition(this.initialPosition.x - super.getSprite().getWidth() / 2f,
                 this.initialPosition.y - super.getSprite().getHeight() / 2f);
+
+        GunBullet.bulletID++;
     }
 
     private void setAnimationController(){
@@ -105,6 +109,16 @@ public class GunBullet extends Bullet{
     @Override
     public void interact(Player player) {
 
+    }
+
+    @Override
+    public void interact(GhostPlayer ghostPlayer) {
+        if(super.getCollider().overlaps(ghostPlayer.getCollider())){
+            if(ghostPlayer.getLife() > 0) {
+                super.setReadyToDestroy(true);
+                ghostPlayer.setLife(ghostPlayer.getLife() - 1);
+            }
+        }
     }
 
     @Override

@@ -2,6 +2,8 @@ package general;
 
 public class IDs {
 
+    public enum CharacterType{SOLDIER, CLOWN, PIRATE, KNIGHT}
+
     /**---------- MAP1 TILES----------**/
     public static final int BASIC1                      = 0;
     public static final int BASIC2                      = 1;
@@ -28,32 +30,59 @@ public class IDs {
     public static final int TOP11                       = 22;
 
     /**---------- SOLDIER ----------**/
-    public static final int SOLDIER_IDLE                = 23;
-    public static final int SOLDIER_WALKING             = 24;
-    public static final int SOLDIER_SHOOTING            = 25;
-    public static final int SOLDIER_WALKING_SHOOTING    = 26;
-    public static final int SOLDIER_DYING               = 27;
+    public static final int SOLDIER_1_IDLE              = 23;
+    public static final int SOLDIER_1_WALKING           = 24;
+    public static final int SOLDIER_1_DYING             = 25;
+
+    public static final int SOLDIER_2_IDLE              = 26;
+    public static final int SOLDIER_2_WALKING           = 27;
+    public static final int SOLDIER_2_DYING             = 28;
+
+    public static final int SOLDIER_3_IDLE              = 29;
+    public static final int SOLDIER_3_WALKING           = 30;
+    public static final int SOLDIER_3_DYING             = 31;
 
     /**---------- HAMMER_CLOWN_1 ---**/
 
-    public static final int CLOWN_1_IDLE                = 28;
-    public static final int CLOWN_1_WALKING             = 29;
-    public static final int CLOWN_1_SHOOTING            = 30;
-    public static final int CLOWN_1_DYING               = 31;
+    public static final int CLOWN_1_IDLE                = 32;
+    public static final int CLOWN_1_WALKING             = 33;
+    public static final int CLOWN_1_DYING               = 34;
+
+    public static final int CLOWN_2_IDLE                = 35;
+    public static final int CLOWN_2_WALKING             = 36;
+    public static final int CLOWN_2_DYING               = 37;
+
+    public static final int CLOWN_3_IDLE                = 38;
+    public static final int CLOWN_3_WALKING             = 39;
+    public static final int CLOWN_3_DYING               = 40;
 
     /**---------- KNIGHT_1 ---------**/
 
-    public static final int KNIGHT_1_IDLE               = 32;
-    public static final int KNIGHT_1_WALKING            = 33;
-    public static final int KNIGHT_1_SHOOTING           = 34;
-    public static final int KNIGHT_1_DYING              = 35;
+    public static final int KNIGHT_1_IDLE               = 41;
+    public static final int KNIGHT_1_WALKING            = 42;
+    public static final int KNIGHT_1_DYING              = 43;
+
+    public static final int KNIGHT_2_IDLE               = 44;
+    public static final int KNIGHT_2_WALKING            = 45;
+    public static final int KNIGHT_2_DYING              = 46;
+
+    public static final int KNIGHT_3_IDLE               = 47;
+    public static final int KNIGHT_3_WALKING            = 48;
+    public static final int KNIGHT_3_DYING              = 49;
 
     /**---------- PIRATE_1 ---------**/
 
-    public static final int PIRATE_1_IDLE               = 36;
-    public static final int PIRATE_1_WALKING            = 37;
-    public static final int PIRATE_1_SHOOTING           = 38;
-    public static final int PIRATE_1_DYING              = 39;
+    public static final int PIRATE_1_IDLE               = 50;
+    public static final int PIRATE_1_WALKING            = 51;
+    public static final int PIRATE_1_DYING              = 52;
+
+    public static final int PIRATE_2_IDLE               = 53;
+    public static final int PIRATE_2_WALKING            = 54;
+    public static final int PIRATE_2_DYING              = 55;
+
+    public static final int PIRATE_3_IDLE               = 56;
+    public static final int PIRATE_3_WALKING            = 57;
+    public static final int PIRATE_3_DYING              = 58;
 
     /**---------- BULLETS ----------**/
 
@@ -304,6 +333,13 @@ public class IDs {
     public static final int CM_SKY_DOWN                 = 373;
 
     public static final int GUN                         = 400;
+
+    public static final int HEALTH_BAR_1                = 430;
+    public static final int HEALTH_BAR_2                = 431;
+    public static final int HEALTH_BAR_3                = 432;
+    public static final int HEALTH_BAR_4                = 433;
+    public static final int HEALTH_BAR_5                = 434;
+    public static final int HEALTH_BAR_6                = 435;
 
     public static final int DEFAULT                     = 1000;
 

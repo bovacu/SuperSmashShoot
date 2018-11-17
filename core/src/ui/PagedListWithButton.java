@@ -185,6 +185,7 @@ public abstract class PagedListWithButton extends Sprite implements Ui{
         this.previous.dispose();
         this.font.dispose();
         for(SpriteButton sb : this.sb_itemButtons)
-            sb.dispose();
+            if(sb != null)
+                sb.dispose();
     }
 }

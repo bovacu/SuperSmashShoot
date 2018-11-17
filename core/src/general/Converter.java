@@ -1,5 +1,6 @@
 package general;
 
+import characters.Player;
 import characters.bullets.GunBullet;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -7,16 +8,17 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Converter {
 
-    private static final String MAP_1_TILES     = "graphics/map1Tiles/";
-    private static final String MAP_2_TILES     = "graphics/map2Tiles/";
-    private static final String MAP_3_TILES     = "graphics/map3Tiles/";
-    private static final String SOLDIER         = "graphics/soldier/";
-    private static final String CLOWN1          = "graphics/clownHammer1/";
-    private static final String KNIGHT1         = "graphics/knightAxe/";
-    private static final String PIRATE1         = "graphics/gunPirate/";
+    private static final String MAP_1_TILES     = "graphics/maps/map1Tiles/";
+    private static final String MAP_2_TILES     = "graphics/maps/map2Tiles/";
+    private static final String MAP_3_TILES     = "graphics/maps/map3Tiles/";
+    private static final String SOLDIER         = "graphics/characters/soldier/";
+    private static final String CLOWN1          = "graphics/characters/clown/";
+    private static final String KNIGHT1         = "graphics/characters/knight/";
+    private static final String PIRATE1         = "graphics/characters/pirate/";
     private static final String UI              = "graphics/ui/";
-    private static final String CC              = "graphics/characterSelector/";
-    private static final String CM              = "graphics/mapSelector/";
+    private static final String CC              = "graphics/screens/characterSelector/";
+    private static final String CM              = "graphics/screens/mapSelector/";
+    private static final String HEALTH_BAR      = "graphics/healthBar/";
 
     public static Sprite idToSprite(int id){
         switch (id){
@@ -44,25 +46,44 @@ public class Converter {
             case IDs.TOP10 :                    return new Sprite(new Texture(MAP_1_TILES + "Top10.png"));
             case IDs.TOP11 :                    return new Sprite(new Texture(MAP_1_TILES + "Top11.png"));
 
-            case IDs.SOLDIER_IDLE :             return new Sprite(new Texture(SOLDIER + "idle/idle.png"));
-            case IDs.SOLDIER_WALKING :          return new Sprite(new Texture(SOLDIER + "walking/walking.png"));
-            case IDs.SOLDIER_SHOOTING :         return new Sprite(new Texture(SOLDIER + "shooting/shooting.png"));
-            case IDs.SOLDIER_WALKING_SHOOTING : return new Sprite(new Texture(SOLDIER + "walkingShooting/walkingShooting"));
-            case IDs.SOLDIER_DYING :            return new Sprite(new Texture(SOLDIER + "dying/dying.png"));
+            case IDs.SOLDIER_1_IDLE:             return new Sprite(new Texture(SOLDIER + "idle/idle.png"));
+            case IDs.SOLDIER_1_WALKING:          return new Sprite(new Texture(SOLDIER + "walking/walking.png"));
+            case IDs.SOLDIER_1_DYING:            return new Sprite(new Texture(SOLDIER + "dying/dying.png"));
+
+            case IDs.SOLDIER_2_IDLE:             return new Sprite(new Texture(SOLDIER + "idle/idle2.png"));
+            case IDs.SOLDIER_2_WALKING:          return new Sprite(new Texture(SOLDIER + "walking/walking2.png"));
+            case IDs.SOLDIER_2_DYING:            return new Sprite(new Texture(SOLDIER + "dying/dying2.png"));
+
+            case IDs.SOLDIER_3_IDLE:             return new Sprite(new Texture(SOLDIER + "idle/idle3.png"));
+            case IDs.SOLDIER_3_WALKING:          return new Sprite(new Texture(SOLDIER + "walking/walking3.png"));
+            case IDs.SOLDIER_3_DYING:            return new Sprite(new Texture(SOLDIER + "dying/dying3.png"));
 
             case IDs.CLOWN_1_IDLE :             return new Sprite(new Texture(CLOWN1 + "idle/idle.png"));
             case IDs.CLOWN_1_WALKING :          return new Sprite(new Texture(CLOWN1 + "walking/walking.png"));
-            case IDs.CLOWN_1_SHOOTING :         return new Sprite(new Texture(CLOWN1 + "shooting/shooting.png"));
             case IDs.CLOWN_1_DYING :            return new Sprite(new Texture(CLOWN1 + "dying/dying.png"));
+
+            case IDs.CLOWN_2_IDLE :             return new Sprite(new Texture(CLOWN1 + "idle/idle2.png"));
+            case IDs.CLOWN_2_WALKING :          return new Sprite(new Texture(CLOWN1 + "walking/walking2.png"));
+            case IDs.CLOWN_2_DYING :            return new Sprite(new Texture(CLOWN1 + "dying/dying2.png"));
+
+            case IDs.CLOWN_3_IDLE :             return new Sprite(new Texture(CLOWN1 + "idle/idle3.png"));
+            case IDs.CLOWN_3_WALKING :          return new Sprite(new Texture(CLOWN1 + "walking/walking3.png"));
+            case IDs.CLOWN_3_DYING :            return new Sprite(new Texture(CLOWN1 + "dying/dying3.png"));
 
             case IDs.KNIGHT_1_IDLE :            return new Sprite(new Texture(KNIGHT1 + "idle/idle.png"));
             case IDs.KNIGHT_1_WALKING :         return new Sprite(new Texture(KNIGHT1 + "walking/walking.png"));
-            case IDs.KNIGHT_1_SHOOTING :        return new Sprite(new Texture(KNIGHT1 + "shooting/shooting.png"));
             case IDs.KNIGHT_1_DYING :           return new Sprite(new Texture(KNIGHT1 + "dying/dying.png"));
+
+            case IDs.KNIGHT_2_IDLE :            return new Sprite(new Texture(KNIGHT1 + "idle/idle2.png"));
+            case IDs.KNIGHT_2_WALKING :         return new Sprite(new Texture(KNIGHT1 + "walking/walking2.png"));
+            case IDs.KNIGHT_2_DYING :           return new Sprite(new Texture(KNIGHT1 + "dying/dying2.png"));
+
+            case IDs.KNIGHT_3_IDLE :            return new Sprite(new Texture(KNIGHT1 + "idle/idle3.png"));
+            case IDs.KNIGHT_3_WALKING :         return new Sprite(new Texture(KNIGHT1 + "walking/walking3.png"));
+            case IDs.KNIGHT_3_DYING :           return new Sprite(new Texture(KNIGHT1 + "dying/dying3.png"));
 
             case IDs.PIRATE_1_IDLE :            return new Sprite(new Texture(PIRATE1 + "idle/idle.png"));
             case IDs.PIRATE_1_WALKING :         return new Sprite(new Texture(PIRATE1 + "walking/walking.png"));
-            case IDs.PIRATE_1_SHOOTING :        return new Sprite(new Texture(PIRATE1 + "shooting/shooting.png"));
             case IDs.PIRATE_1_DYING :           return new Sprite(new Texture(PIRATE1 + "dying/dying.png"));
 
             case IDs.GUN_BULLET :               return new Sprite(new Texture(SOLDIER + "bullet/bullet.png"));
@@ -294,6 +315,12 @@ public class Converter {
 
             case IDs.GUN :                      return new Sprite(new Texture(SOLDIER + "gun.png"));
 
+            case IDs.HEALTH_BAR_1 :             return new Sprite(new Texture(HEALTH_BAR + "healthbar1.png"));
+            case IDs.HEALTH_BAR_2 :             return new Sprite(new Texture(HEALTH_BAR + "healthbar2.png"));
+            case IDs.HEALTH_BAR_3 :             return new Sprite(new Texture(HEALTH_BAR + "healthbar3.png"));
+            case IDs.HEALTH_BAR_4 :             return new Sprite(new Texture(HEALTH_BAR + "healthbar4.png"));
+            case IDs.HEALTH_BAR_5 :             return new Sprite(new Texture(HEALTH_BAR + "healthbar5.png"));
+            case IDs.HEALTH_BAR_6 :             return new Sprite(new Texture(HEALTH_BAR + "healthbar6.png"));
 
             case IDs.DEFAULT :                  return new Sprite();
 
@@ -306,9 +333,10 @@ public class Converter {
             return new Rectangle((int)gameObject.getPosition().x, (int)gameObject.getPosition().y,
                     (int)gameObject.getSprite().getWidth(), (int)gameObject.getSprite().getHeight());
 
-        else if(gameObject.getId() == IDs.SOLDIER_IDLE)
-            return new Rectangle((int)gameObject.getPosition().x, (int)gameObject.getPosition().y,
-                    (int)gameObject.getSprite().getWidth(), (int)gameObject.getSprite().getHeight());
+        else if(gameObject.getId() == IDs.SOLDIER_1_IDLE) {
+            return new Rectangle((int) gameObject.getPosition().x, (int) gameObject.getPosition().y,
+                    (int) gameObject.getSprite().getWidth(), (int) gameObject.getSprite().getHeight());
+        }
 
         else if(gameObject.getId() == IDs.GUN_BULLET)
             return new Rectangle((int)gameObject.getPosition().x + GunBullet.WH / 2f,
@@ -337,9 +365,32 @@ public class Converter {
             return null;
     }
 
+    public static Rectangle ghostCollider(GameObject gameObject){
+        return new Rectangle((int)gameObject.getPosition().x, (int)gameObject.getPosition().y,
+                55, 55);
+    }
+
+    public static Sprite characterTypeToGhostBulletSprite(IDs.CharacterType characterType){
+        switch (characterType){
+            case CLOWN:         return new Sprite(new Texture(SOLDIER + "bullet/bullet.png"));
+            case KNIGHT:        return new Sprite(new Texture(SOLDIER + "bullet/bullet.png"));
+            case PIRATE:        return new Sprite(new Texture(SOLDIER + "bullet/bullet.png"));
+            case SOLDIER:       return new Sprite(new Texture(SOLDIER + "bullet/bullet.png"));
+        }
+
+        return new Sprite();
+    }
+
+    public static Rectangle getGhostBulletCollider(Sprite gameObject){
+        return new Rectangle((int)gameObject.getX() + GunBullet.WH / 2f,
+                (int)gameObject.getY() + GunBullet.WH / 2f,
+                (int)gameObject.getWidth() / 2f,
+                (int)gameObject.getHeight() / 2f);
+    }
+
     public static Rectangle[] gameObjectToPlayerCollider(GameObject gameObject){
         Rectangle colliders[];
-        if(gameObject.getId() == IDs.SOLDIER_IDLE) {
+        if(gameObject.getId() == IDs.SOLDIER_1_IDLE || gameObject.getId() == IDs.SOLDIER_2_IDLE || gameObject.getId() == IDs.SOLDIER_3_IDLE) {
             Rectangle c0 = new Rectangle((int) gameObject.getPosition().x + gameObject.getSprite().getWidth() / 4f,
                     (int) gameObject.getPosition().y,
                     (int) gameObject.getSprite().getWidth() / 2f, (int) gameObject.getSprite().getHeight() / 5f);
@@ -363,7 +414,7 @@ public class Converter {
             colliders[3] = c3;
         }
 
-        else if(gameObject.getId() == IDs.CLOWN_1_IDLE) {
+        else if(gameObject.getId() == IDs.CLOWN_1_IDLE || gameObject.getId() == IDs.CLOWN_2_IDLE || gameObject.getId() == IDs.CLOWN_3_IDLE) {
             Rectangle c0 = new Rectangle((int) gameObject.getPosition().x + gameObject.getSprite().getWidth() / 4f,
                     (int) gameObject.getPosition().y,
                     (int) gameObject.getSprite().getWidth() / 2f, (int) gameObject.getSprite().getHeight() / 5f);
@@ -387,7 +438,7 @@ public class Converter {
             colliders[3] = c3;
         }
 
-        else if(gameObject.getId() == IDs.KNIGHT_1_IDLE) {
+        else if(gameObject.getId() == IDs.KNIGHT_1_IDLE || gameObject.getId() == IDs.KNIGHT_2_IDLE || gameObject.getId() == IDs.KNIGHT_3_IDLE) {
             Rectangle c0 = new Rectangle((int) gameObject.getPosition().x + gameObject.getSprite().getWidth() / 4f,
                     (int) gameObject.getPosition().y,
                     (int) gameObject.getSprite().getWidth() / 2f, (int) gameObject.getSprite().getHeight() / 5f);
@@ -411,7 +462,7 @@ public class Converter {
             colliders[3] = c3;
         }
 
-        else if(gameObject.getId() == IDs.PIRATE_1_IDLE) {
+        else if(gameObject.getId() == IDs.PIRATE_1_IDLE || gameObject.getId() == IDs.PIRATE_2_IDLE || gameObject.getId() == IDs.PIRATE_3_IDLE) {
             Rectangle c0 = new Rectangle((int) gameObject.getPosition().x + gameObject.getSprite().getWidth() / 4f,
                     (int) gameObject.getPosition().y,
                     (int) gameObject.getSprite().getWidth() / 2f, (int) gameObject.getSprite().getHeight() / 5f);
@@ -448,5 +499,33 @@ public class Converter {
         }
 
         return id;
+    }
+
+    public static int characterTypeToInt(IDs.CharacterType characterType){
+        switch (characterType){
+            case SOLDIER :      return IDs.SOLDIER_1_IDLE;
+            case CLOWN   :      return IDs.CLOWN_1_IDLE;
+            case KNIGHT  :      return IDs.KNIGHT_1_IDLE;
+            case PIRATE  :      return IDs.PIRATE_1_IDLE;
+            default      :      return -1;
+        }
+    }
+
+    public static int soldierSkinToIdle(int skin){
+        switch (skin){
+            case 1 : return IDs.SOLDIER_1_IDLE;
+            case 2 : return IDs.SOLDIER_2_IDLE;
+            case 3 : return IDs.SOLDIER_3_IDLE;
+            default: return -1;
+        }
+    }
+
+    public static int[] soldierSkinToAnimationsIds(int skin) {
+        switch (skin) {
+            case 1: return new int[]{IDs.SOLDIER_1_IDLE, IDs.SOLDIER_1_WALKING, IDs.SOLDIER_1_DYING};
+            case 2: return new int[]{IDs.SOLDIER_2_IDLE, IDs.SOLDIER_2_WALKING, IDs.SOLDIER_2_DYING};
+            case 3: return new int[]{IDs.SOLDIER_3_IDLE, IDs.SOLDIER_3_WALKING, IDs.SOLDIER_3_DYING};
+            default: return new int[]{-1, -1, -1};
+        }
     }
 }

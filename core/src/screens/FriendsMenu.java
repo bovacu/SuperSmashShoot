@@ -274,6 +274,11 @@ public class FriendsMenu extends InputAdapter implements Screen {
         SuperSmashShoot.ms_message.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
 
         this.game.batch.end();
+
+        if(SuperSmashShoot.serverListener.getLoadCharacterSelectorF()) {
+            this.dispose();
+            this.game.setScreen(new CharacterSelection(this.game));
+        }
     }
 
     @Override

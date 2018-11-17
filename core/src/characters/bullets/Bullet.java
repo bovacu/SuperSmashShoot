@@ -1,5 +1,6 @@
 package characters.bullets;
 
+import characters.GhostPlayer;
 import characters.Player;
 import com.badlogic.gdx.math.Rectangle;
 import general.Converter;
@@ -49,5 +50,6 @@ public abstract class Bullet extends GameObject {
     public abstract void move();
     public abstract void interact(Player player);
     public abstract void interact(Bullet bullet);
+    public abstract void interact(GhostPlayer ghostPlayer);
     public abstract void interact(List<Tile> tile);
 }

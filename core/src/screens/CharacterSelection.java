@@ -25,8 +25,8 @@ import java.util.List;
 
 public class CharacterSelection extends InputAdapter implements Screen {
 
-    private final String CHARACTERS[] = {"KNIGHT", "PIRATE", "CLOWN", "SOLDIER"};
-    private String chosenCharacter;
+    public static IDs.CharacterType chosenCharacter = IDs.CharacterType.SOLDIER;
+    public static int skin = 1;
 
     private SuperSmashShoot game;
 
@@ -49,6 +49,7 @@ public class CharacterSelection extends InputAdapter implements Screen {
         this.camera.setToOrtho(false, SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT);
         this.viewport = new FitViewport(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT, this.camera);
         this.timeBetweenFrames = 0;
+        skin = 1;
 
         this.createBlock1();
         this.createBlock2();
@@ -119,42 +120,48 @@ public class CharacterSelection extends InputAdapter implements Screen {
         this.sb_custom1 = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "1", 64, 64, 1f) {
             @Override
             public void action() {
-                if(chosenCharacter.equals(CHARACTERS[0]))
+                if(chosenCharacter == IDs.CharacterType.KNIGHT)
                     createAnimation(IDs.CC_KNIGHT_1_WALKING);
-                else if(chosenCharacter.equals(CHARACTERS[1]))
+                else if(chosenCharacter == IDs.CharacterType.PIRATE)
                     createAnimation(IDs.CC_PIRATE_1_WALKING);
-                else if(chosenCharacter.equals(CHARACTERS[2]))
+                else if(chosenCharacter == IDs.CharacterType.CLOWN)
                     createAnimation(IDs.CC_CLOWN_1_WALKING);
-                else if(chosenCharacter.equals(CHARACTERS[3]))
+                else if(chosenCharacter == IDs.CharacterType.SOLDIER)
                     createAnimation(IDs.CC_SOLDIER_1_WALKING);
+
+                skin = 1;
             }
         };
 
         this.sb_custom2 = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "2", 64, 64, 1f) {
             @Override
             public void action() {
-                if(chosenCharacter.equals(CHARACTERS[0]))
+                if(chosenCharacter == IDs.CharacterType.KNIGHT)
                     createAnimation(IDs.CC_KNIGHT_2_WALKING);
-                else if(chosenCharacter.equals(CHARACTERS[1]))
+                else if(chosenCharacter == IDs.CharacterType.PIRATE)
                     createAnimation(IDs.CC_PIRATE_2_WALKING);
-                else if(chosenCharacter.equals(CHARACTERS[2]))
+                else if(chosenCharacter == IDs.CharacterType.CLOWN)
                     createAnimation(IDs.CC_CLOWN_2_WALKING);
-                else if(chosenCharacter.equals(CHARACTERS[3]))
+                else if(chosenCharacter == IDs.CharacterType.SOLDIER)
                     createAnimation(IDs.CC_SOLDIER_2_WALKING);
+
+                skin = 2;
             }
         };
 
         this.sb_custom3 = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "3", 64, 64, 1f) {
             @Override
             public void action() {
-                if(chosenCharacter.equals(CHARACTERS[0]))
+                if(chosenCharacter == IDs.CharacterType.KNIGHT)
                     createAnimation(IDs.CC_KNIGHT_3_WALKING);
-                else if(chosenCharacter.equals(CHARACTERS[1]))
+                else if(chosenCharacter == IDs.CharacterType.PIRATE)
                     createAnimation(IDs.CC_PIRATE_3_WALKING);
-                else if(chosenCharacter.equals(CHARACTERS[2]))
+                else if(chosenCharacter == IDs.CharacterType.CLOWN)
                     createAnimation(IDs.CC_CLOWN_3_WALKING);
-                else if(chosenCharacter.equals(CHARACTERS[3]))
+                else if(chosenCharacter == IDs.CharacterType.SOLDIER)
                     createAnimation(IDs.CC_SOLDIER_3_WALKING);
+
+                skin = 3;
             }
         };
 
@@ -194,10 +201,10 @@ public class CharacterSelection extends InputAdapter implements Screen {
         timeBetweenFrames = 0;
 
         switch (id){
-            case IDs.CC_KNIGHT_1_WALKING:  this.chosenCharacter = this.CHARACTERS[0]; break;
-            case IDs.CC_PIRATE_1_WALKING :  this.chosenCharacter = this.CHARACTERS[1]; break;
-            case IDs.CC_CLOWN_1_WALKING :   this.chosenCharacter = this.CHARACTERS[2]; break;
-            case IDs.CC_SOLDIER_1_WALKING : this.chosenCharacter = this.CHARACTERS[3]; break;
+            case IDs.CC_KNIGHT_1_WALKING    :     chosenCharacter = IDs.CharacterType.KNIGHT;     break;
+            case IDs.CC_PIRATE_1_WALKING    :     chosenCharacter = IDs.CharacterType.PIRATE;     break;
+            case IDs.CC_CLOWN_1_WALKING     :     chosenCharacter = IDs.CharacterType.CLOWN;      break;
+            case IDs.CC_SOLDIER_1_WALKING   :     chosenCharacter = IDs.CharacterType.SOLDIER;    break;
         }
     }
 

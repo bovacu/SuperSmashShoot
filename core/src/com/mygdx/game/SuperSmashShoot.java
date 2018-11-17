@@ -3,12 +3,12 @@ package com.mygdx.game;
 import characters.ServerListener;
 import characters.ServerSpeaker;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import general.DataManager;
 import general.IDs;
-import screens.CharacterSelection;
 import screens.MainMenu;
 import ui.Message;
 import ui.PartyList;
@@ -20,8 +20,6 @@ import java.util.concurrent.Executors;
 
 
 public class SuperSmashShoot extends Game {
-	public static final String HOST_NAME = "supersmashshoot.ddns.net";
-
 	public SpriteBatch batch;
 	public ShapeRenderer debugger;
 	public static int SCREEN_WIDTH;
@@ -38,6 +36,12 @@ public class SuperSmashShoot extends Game {
 	public static int partyId;
 
 	public static PartyList partyList;
+
+	private final String HOST;
+
+	public SuperSmashShoot(String host){
+		this.HOST = host;
+	}
 	
 	@Override
 	public void create () {
@@ -52,8 +56,8 @@ public class SuperSmashShoot extends Game {
 		DataManager.loadData();
 		ms_message = new Message("", IDs.MESSAGE_BACKGROUND);
 		SuperSmashShoot.pool = Executors.newFixedThreadPool(2);
-		SuperSmashShoot.serverSpeaker = new ServerSpeaker();
-		SuperSmashShoot.serverListener = new ServerListener(this);
+		SuperSmashShoot.serverSpeaker = new ServerSpeaker(this.HOST);
+		SuperSmashShoot.serverListener = new ServerListener(this, this.HOST);
 		SuperSmashShoot.pool.execute(SuperSmashShoot.serverSpeaker);
 		SuperSmashShoot.pool.execute(SuperSmashShoot.serverListener);
 

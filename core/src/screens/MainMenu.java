@@ -1,5 +1,6 @@
 package screens;
 
+import characters.ServerSpeaker;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
@@ -62,10 +63,12 @@ public class MainMenu extends InputAdapter implements Screen {
         this.sb_local = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN,"LOCAL", 512, 128, 1f) {
             @Override
             public void action() {
-                if(DataManager.partyID == -1 || DataManager.partyID == Converter.userNameToPartyId()){
+                if(DataManager.partyID == -1){
                     this.dispose();
                     game.setScreen(new Map(game, "port.txt"));
-                }else
+                }else if(DataManager.partyID == Converter.userNameToPartyId())
+                    SuperSmashShoot.ms_message.update("You cannot play local while in party");
+                else
                     SuperSmashShoot.ms_message.update("You are not the host of the party");
             }
         };
@@ -78,8 +81,10 @@ public class MainMenu extends InputAdapter implements Screen {
                 if(DataManager.connected && (DataManager.partyID == -1 || DataManager.partyID == Converter.userNameToPartyId())){
                     this.dispose();
                     game.setScreen(new MultiplayerOptionMenu(game));
-                }else
+                }else if(!DataManager.connected)
                     SuperSmashShoot.ms_message.update("You have to connect first!");
+                else
+                    SuperSmashShoot.ms_message.update("You are not the host of the party");
             }
         };
 

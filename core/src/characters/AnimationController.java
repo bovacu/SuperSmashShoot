@@ -50,6 +50,10 @@ public class AnimationController {
                 this.indexOfAnimation = i;
     }
 
+    public void setPlayMode(Animation.PlayMode playMode){
+        this.activeAnimation.setPlayMode(playMode);
+    }
+
     public String getCurrentAnimationName(){
         return (String)this.namesAndAnimations.keySet().toArray()[this.indexOfAnimation];
     }

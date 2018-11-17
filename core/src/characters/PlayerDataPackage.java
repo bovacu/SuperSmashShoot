@@ -1,21 +1,27 @@
 package characters;
 
+import general.IDs;
+
 public class PlayerDataPackage{
 
     private String usr;
     private int[] position;
-    private int id;
+    private IDs.CharacterType characterType;
+    private int skin;
     private int aimDirection;
     private boolean flipAnim;
     private String anim;
+    private int life;
 
-    public PlayerDataPackage(int id, String usr){
+    public PlayerDataPackage(IDs.CharacterType characterType, int skin, String usr){
         this.position = new int[2];
-        this.id = id;
+        this.characterType = characterType;
+        this.skin = skin;
         this.usr = usr;
         this.anim = "IDLE";
         this.flipAnim = false;
         this.aimDirection = 1;
+        this.life = 5;
     }
 
     public void update(int[] position, String anim){
@@ -23,12 +29,16 @@ public class PlayerDataPackage{
         this.anim = anim;
     }
 
+    public int getSkin() {
+        return skin;
+    }
+
     public int[] getPosition(){
         return this.position;
     }
 
-    public int getId(){
-        return this.id;
+    public IDs.CharacterType getCharacterType(){
+        return this.characterType;
     }
 
     public String getUsr(){
@@ -47,11 +57,16 @@ public class PlayerDataPackage{
         this.flipAnim = flipAnim;
     }
 
-    public int getAimDirection(){
-        return this.aimDirection;
-    }
-
     public void setAimDirection(int aimDirection){
         this.aimDirection = aimDirection;
     }
+
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
 }

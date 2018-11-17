@@ -103,6 +103,11 @@ public class StatsMenu extends InputAdapter implements Screen {
         this.sb_back.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         SuperSmashShoot.ms_message.render(this.game.batch, (int)mousePos.x, (int)mousePos.y);
         this.game.batch.end();
+
+        if(SuperSmashShoot.serverListener.getLoadCharacterSelectorF()) {
+            this.dispose();
+            this.game.setScreen(new CharacterSelection(this.game));
+        }
     }
 
     @Override
