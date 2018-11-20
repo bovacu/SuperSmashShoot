@@ -17,6 +17,7 @@ import com.mygdx.game.SuperSmashShoot;
 import general.Converter;
 import general.DataManager;
 import general.IDs;
+import maps.LocalMap;
 import maps.Map;
 import ui.*;
 
@@ -65,7 +66,7 @@ public class MainMenu extends InputAdapter implements Screen {
             public void action() {
                 if(DataManager.partyID == -1){
                     this.dispose();
-                    game.setScreen(new Map(game, "port.txt"));
+                    game.setScreen(new LocalMap(game, "port.txt"));
                 }else if(DataManager.partyID == Converter.userNameToPartyId())
                     SuperSmashShoot.ms_message.update("You cannot play local while in party");
                 else

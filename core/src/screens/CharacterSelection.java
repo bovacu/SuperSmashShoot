@@ -43,13 +43,16 @@ public class CharacterSelection extends InputAdapter implements Screen {
     private Animation<TextureRegion> selectedCharacter;
     private float timeBetweenFrames;
 
+    private boolean blockSelection;
+
     public CharacterSelection(SuperSmashShoot game){
         this.game = game;
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT);
         this.viewport = new FitViewport(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT, this.camera);
         this.timeBetweenFrames = 0;
-        skin = 1;
+        CharacterSelection.skin = 1;
+        this.blockSelection = false;
 
         this.createBlock1();
         this.createBlock2();
@@ -77,28 +80,32 @@ public class CharacterSelection extends InputAdapter implements Screen {
         this.sb_knight = new SpriteButton(IDs.CC_KNIGHT_PICTURE, IDs.CC_KNIGHT_PICTURE_DOWN) {
             @Override
             public void action() {
-                createAnimation(IDs.CC_KNIGHT_1_WALKING);
+                if(!blockSelection)
+                    createAnimation(IDs.CC_KNIGHT_1_WALKING);
             }
         };
 
         this.sb_pirate = new SpriteButton(IDs.CC_PIRATE_PICTURE, IDs.CC_PIRATE_PICTURE_DOWN) {
             @Override
             public void action() {
-                createAnimation(IDs.CC_PIRATE_1_WALKING);
+                if(!blockSelection)
+                    createAnimation(IDs.CC_PIRATE_1_WALKING);
             }
         };
 
         this.sb_clown = new SpriteButton(IDs.CC_CLOWN_PICTURE, IDs.CC_CLOWN_PICTURE_DOWN) {
             @Override
             public void action() {
-               createAnimation(IDs.CC_CLOWN_1_WALKING);
+               if(!blockSelection)
+                   createAnimation(IDs.CC_CLOWN_1_WALKING);
             }
         };
 
         this.sb_soldier = new SpriteButton(IDs.CC_SOLDIER_PICTURE, IDs.CC_SOLDIER_PICTURE_DOWN) {
             @Override
             public void action() {
-                createAnimation(IDs.CC_SOLDIER_1_WALKING);
+                if(!blockSelection)
+                    createAnimation(IDs.CC_SOLDIER_1_WALKING);
             }
         };
 
@@ -120,48 +127,54 @@ public class CharacterSelection extends InputAdapter implements Screen {
         this.sb_custom1 = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "1", 64, 64, 1f) {
             @Override
             public void action() {
-                if(chosenCharacter == IDs.CharacterType.KNIGHT)
-                    createAnimation(IDs.CC_KNIGHT_1_WALKING);
-                else if(chosenCharacter == IDs.CharacterType.PIRATE)
-                    createAnimation(IDs.CC_PIRATE_1_WALKING);
-                else if(chosenCharacter == IDs.CharacterType.CLOWN)
-                    createAnimation(IDs.CC_CLOWN_1_WALKING);
-                else if(chosenCharacter == IDs.CharacterType.SOLDIER)
-                    createAnimation(IDs.CC_SOLDIER_1_WALKING);
+                if(!blockSelection){
+                    if(chosenCharacter == IDs.CharacterType.KNIGHT)
+                        createAnimation(IDs.CC_KNIGHT_1_WALKING);
+                    else if(chosenCharacter == IDs.CharacterType.PIRATE)
+                        createAnimation(IDs.CC_PIRATE_1_WALKING);
+                    else if(chosenCharacter == IDs.CharacterType.CLOWN)
+                        createAnimation(IDs.CC_CLOWN_1_WALKING);
+                    else if(chosenCharacter == IDs.CharacterType.SOLDIER)
+                        createAnimation(IDs.CC_SOLDIER_1_WALKING);
 
-                skin = 1;
+                    skin = 1;
+                }
             }
         };
 
         this.sb_custom2 = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "2", 64, 64, 1f) {
             @Override
             public void action() {
-                if(chosenCharacter == IDs.CharacterType.KNIGHT)
-                    createAnimation(IDs.CC_KNIGHT_2_WALKING);
-                else if(chosenCharacter == IDs.CharacterType.PIRATE)
-                    createAnimation(IDs.CC_PIRATE_2_WALKING);
-                else if(chosenCharacter == IDs.CharacterType.CLOWN)
-                    createAnimation(IDs.CC_CLOWN_2_WALKING);
-                else if(chosenCharacter == IDs.CharacterType.SOLDIER)
-                    createAnimation(IDs.CC_SOLDIER_2_WALKING);
+                if(!blockSelection){
+                    if(chosenCharacter == IDs.CharacterType.KNIGHT)
+                        createAnimation(IDs.CC_KNIGHT_2_WALKING);
+                    else if(chosenCharacter == IDs.CharacterType.PIRATE)
+                        createAnimation(IDs.CC_PIRATE_2_WALKING);
+                    else if(chosenCharacter == IDs.CharacterType.CLOWN)
+                        createAnimation(IDs.CC_CLOWN_2_WALKING);
+                    else if(chosenCharacter == IDs.CharacterType.SOLDIER)
+                        createAnimation(IDs.CC_SOLDIER_2_WALKING);
 
-                skin = 2;
+                    skin = 2;
+                }
             }
         };
 
         this.sb_custom3 = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "3", 64, 64, 1f) {
             @Override
             public void action() {
-                if(chosenCharacter == IDs.CharacterType.KNIGHT)
-                    createAnimation(IDs.CC_KNIGHT_3_WALKING);
-                else if(chosenCharacter == IDs.CharacterType.PIRATE)
-                    createAnimation(IDs.CC_PIRATE_3_WALKING);
-                else if(chosenCharacter == IDs.CharacterType.CLOWN)
-                    createAnimation(IDs.CC_CLOWN_3_WALKING);
-                else if(chosenCharacter == IDs.CharacterType.SOLDIER)
-                    createAnimation(IDs.CC_SOLDIER_3_WALKING);
+                if(!blockSelection){
+                    if(chosenCharacter == IDs.CharacterType.KNIGHT)
+                        createAnimation(IDs.CC_KNIGHT_3_WALKING);
+                    else if(chosenCharacter == IDs.CharacterType.PIRATE)
+                        createAnimation(IDs.CC_PIRATE_3_WALKING);
+                    else if(chosenCharacter == IDs.CharacterType.CLOWN)
+                        createAnimation(IDs.CC_CLOWN_3_WALKING);
+                    else if(chosenCharacter == IDs.CharacterType.SOLDIER)
+                        createAnimation(IDs.CC_SOLDIER_3_WALKING);
 
-                skin = 3;
+                    skin = 3;
+                }
             }
         };
 
@@ -177,12 +190,15 @@ public class CharacterSelection extends InputAdapter implements Screen {
         this.sb_ok = new SpriteTextButton(IDs.GRAY_BUTTON_UP, IDs.GRAY_BUTTON_DOWN, "FIGHT", 172, 64, 1f) {
             @Override
             public void action() {
-                if(chosenCharacter != null){
-                    List<String> toSend = new ArrayList<>();
-                    toSend.add("LOAD MAP SELECTOR");
-                    SuperSmashShoot.serverSpeaker.setToSend(toSend);
-                }else
-                    SuperSmashShoot.ms_message.update("You have to select a character first");
+                if(!blockSelection){
+                    if(chosenCharacter != null){
+                        blockSelection = true;
+                        List<String> toSend = new ArrayList<>();
+                        toSend.add("LOAD MAP SELECTOR");
+                        SuperSmashShoot.serverSpeaker.setToSend(toSend);
+                    }else
+                        SuperSmashShoot.ms_message.update("You have to select a character first");
+                }
             }
         };
 

@@ -1,7 +1,8 @@
 package general;
 
-import characters.Player;
 import characters.bullets.GunBullet;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
@@ -86,9 +87,18 @@ public class Converter {
             case IDs.PIRATE_1_WALKING :         return new Sprite(new Texture(PIRATE1 + "walking/walking.png"));
             case IDs.PIRATE_1_DYING :           return new Sprite(new Texture(PIRATE1 + "dying/dying.png"));
 
+            case IDs.PIRATE_2_IDLE :            return new Sprite(new Texture(PIRATE1 + "idle/idle2.png"));
+            case IDs.PIRATE_2_WALKING :         return new Sprite(new Texture(PIRATE1 + "walking/walking2.png"));
+            case IDs.PIRATE_2_DYING :           return new Sprite(new Texture(PIRATE1 + "dying/dying2.png"));
+
+            case IDs.PIRATE_3_IDLE :            return new Sprite(new Texture(PIRATE1 + "idle/idle3.png"));
+            case IDs.PIRATE_3_WALKING :         return new Sprite(new Texture(PIRATE1 + "walking/walking3.png"));
+            case IDs.PIRATE_3_DYING :           return new Sprite(new Texture(PIRATE1 + "dying/dying3.png"));
+
             case IDs.GUN_BULLET :               return new Sprite(new Texture(SOLDIER + "bullet/bullet.png"));
             case IDs.GUN_BULLET_DESTROYED :     return new Sprite(new Texture(SOLDIER + "bullet/bulletDestroyed.png"));
             case IDs.HAMMER :                   return new Sprite(new Texture(CLOWN1 + "hammer/hammer.png"));
+            case IDs.HAMMER_DESTROYED:          return new Sprite(new Texture(CLOWN1 + "hammer/hammerDestroyed.png"));
             case IDs.AXE :                      return new Sprite(new Texture(KNIGHT1 + "axe/axe.png"));
 
             case IDs.LOCAL :                    return new Sprite(new Texture(UI + "local.png"));
@@ -314,6 +324,7 @@ public class Converter {
             case IDs.CM_SKY_DOWN :              return new Sprite(new Texture(CM + "skyMapDown.png"));
 
             case IDs.GUN :                      return new Sprite(new Texture(SOLDIER + "gun.png"));
+            case IDs.PISTOL :                   return new Sprite(new Texture(PIRATE1 + "gun/gun.png"));
 
             case IDs.HEALTH_BAR_1 :             return new Sprite(new Texture(HEALTH_BAR + "healthbar1.png"));
             case IDs.HEALTH_BAR_2 :             return new Sprite(new Texture(HEALTH_BAR + "healthbar2.png"));
@@ -338,7 +349,7 @@ public class Converter {
                     (int) gameObject.getSprite().getWidth(), (int) gameObject.getSprite().getHeight());
         }
 
-        else if(gameObject.getId() == IDs.GUN_BULLET)
+        else if(gameObject.getId() == IDs.GUN_BULLET || gameObject.getId() == IDs.HAMMER || gameObject.getId() == IDs.AXE)
             return new Rectangle((int)gameObject.getPosition().x + GunBullet.WH / 2f,
                     (int)gameObject.getPosition().y + GunBullet.WH / 2f,
                     (int)gameObject.getSprite().getWidth() / 2f,
@@ -372,8 +383,8 @@ public class Converter {
 
     public static Sprite characterTypeToGhostBulletSprite(IDs.CharacterType characterType){
         switch (characterType){
-            case CLOWN:         return new Sprite(new Texture(SOLDIER + "bullet/bullet.png"));
-            case KNIGHT:        return new Sprite(new Texture(SOLDIER + "bullet/bullet.png"));
+            case CLOWN:         return new Sprite(new Texture(CLOWN1  + "hammer/hammer.png"));
+            case KNIGHT:        return new Sprite(new Texture(KNIGHT1 + "axe/axe.png"));
             case PIRATE:        return new Sprite(new Texture(SOLDIER + "bullet/bullet.png"));
             case SOLDIER:       return new Sprite(new Texture(SOLDIER + "bullet/bullet.png"));
         }
@@ -501,6 +512,18 @@ public class Converter {
         return id;
     }
 
+    public static Sound idToSound(int id){
+        switch (id){
+            case IDs.MENU_MUSIC     : return Gdx.audio.newSound(Gdx.files.internal("sounds/menuMusic.wav"));
+            case IDs.CITY_MUSIC     : return Gdx.audio.newSound(Gdx.files.internal("sounds/cityMapMusic.wav"));
+            case IDs.SKY_MUSIC      : return Gdx.audio.newSound(Gdx.files.internal("sounds/skyMapMusic.wav"));
+            case IDs.SHOT_EFFECT    : return Gdx.audio.newSound(Gdx.files.internal("sounds/rifle.wav"));
+            case IDs.THROW_EFFECT   : return Gdx.audio.newSound(Gdx.files.internal("sounds/throw.wav"));
+            case IDs.PISTOL_EFFECT  : return Gdx.audio.newSound(Gdx.files.internal("sounds/pistol.wav"));
+            default : return null;
+        }
+    }
+
     public static int characterTypeToInt(IDs.CharacterType characterType){
         switch (characterType){
             case SOLDIER :      return IDs.SOLDIER_1_IDLE;
@@ -520,11 +543,65 @@ public class Converter {
         }
     }
 
+    public static int clownSkinToIdle(int skin){
+        switch (skin){
+            case 1 : return IDs.CLOWN_1_IDLE;
+            case 2 : return IDs.CLOWN_2_IDLE;
+            case 3 : return IDs.CLOWN_3_IDLE;
+            default: return -1;
+        }
+    }
+
+    public static int knightSkinToIdle(int skin){
+        switch (skin){
+            case 1 : return IDs.KNIGHT_1_IDLE;
+            case 2 : return IDs.KNIGHT_2_IDLE;
+            case 3 : return IDs.KNIGHT_3_IDLE;
+            default: return -1;
+        }
+    }
+
+    public static int pirateSkinToIdle(int skin){
+        switch (skin){
+            case 1 : return IDs.PIRATE_1_IDLE;
+            case 2 : return IDs.PIRATE_2_IDLE;
+            case 3 : return IDs.PIRATE_3_IDLE;
+            default: return -1;
+        }
+    }
+
     public static int[] soldierSkinToAnimationsIds(int skin) {
         switch (skin) {
             case 1: return new int[]{IDs.SOLDIER_1_IDLE, IDs.SOLDIER_1_WALKING, IDs.SOLDIER_1_DYING};
             case 2: return new int[]{IDs.SOLDIER_2_IDLE, IDs.SOLDIER_2_WALKING, IDs.SOLDIER_2_DYING};
             case 3: return new int[]{IDs.SOLDIER_3_IDLE, IDs.SOLDIER_3_WALKING, IDs.SOLDIER_3_DYING};
+            default: return new int[]{-1, -1, -1};
+        }
+    }
+
+    public static int[] clownSkinToAnimationsIds(int skin) {
+        switch (skin) {
+            case 1: return new int[]{IDs.CLOWN_1_IDLE, IDs.CLOWN_1_WALKING, IDs.CLOWN_1_DYING};
+            case 2: return new int[]{IDs.CLOWN_2_IDLE, IDs.CLOWN_2_WALKING, IDs.CLOWN_2_DYING};
+            case 3: return new int[]{IDs.CLOWN_3_IDLE, IDs.CLOWN_3_WALKING, IDs.CLOWN_3_DYING};
+            default: return new int[]{-1, -1, -1};
+        }
+    }
+
+    public static int[] knightSkinToAnimationsIds(int skin) {
+        switch (skin) {
+            case 1: return new int[]{IDs.KNIGHT_1_IDLE, IDs.KNIGHT_1_WALKING, IDs.KNIGHT_1_DYING};
+            case 2: return new int[]{IDs.KNIGHT_2_IDLE, IDs.KNIGHT_2_WALKING, IDs.KNIGHT_2_DYING};
+            case 3: return new int[]{IDs.KNIGHT_3_IDLE, IDs.KNIGHT_3_WALKING, IDs.KNIGHT_3_DYING};
+            default: return new int[]{-1, -1, -1};
+        }
+    }
+
+    public static int[] pirateSkinToAnimationsIds(int skin) {
+        switch (skin) {
+            case 1: return new int[]{IDs.PIRATE_1_IDLE, IDs.PIRATE_1_WALKING, IDs.PIRATE_1_DYING};
+            case 2: return new int[]{IDs.PIRATE_2_IDLE, IDs.PIRATE_2_WALKING, IDs.PIRATE_2_DYING};
+            case 3: return new int[]{IDs.PIRATE_3_IDLE, IDs.PIRATE_3_WALKING, IDs.PIRATE_3_DYING};
             default: return new int[]{-1, -1, -1};
         }
     }

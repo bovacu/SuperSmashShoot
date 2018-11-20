@@ -4,16 +4,23 @@ import characters.*;
 import characters.bullets.Bullet;
 import characters.bullets.BulletDataPackage;
 import characters.bullets.GhostBullet;
+import characters.bullets.GunBullet;
+import characters.players.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.SuperSmashShoot;
+import general.Converter;
 import general.DataManager;
 import general.FrameRate;
 import general.IDs;
@@ -38,8 +45,15 @@ public class Map implements Screen {
 
     private Sprite background;
 
+    private float timeToStart;
+    private BitmapFont countDownFont;
+    private GlyphLayout fontInfo;
+
     private FrameRate fps;
     public static boolean showDebugging, showFps;
+
+    private MapBorders mapBorders;
+    private Sound music;
 
     public Map(SuperSmashShoot game, String mapName){
         this.game = game;
@@ -47,18 +61,36 @@ public class Map implements Screen {
         this.camera.setToOrtho(false, SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT);
         this.viewport = new FitViewport(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT, this.camera);
 
+        SuperSmashShoot.mediaPlayer.pause();
+
+        if(mapName.toLowerCase().contains("port"))
+            this.music = Converter.idToSound(IDs.CITY_MUSIC);
+        else if(mapName.toLowerCase().contains("sky"))
+            this.music = Converter.idToSound(IDs.SKY_MUSIC);
+
+        this.music.loop(DataManager.music / 100f);
+
         this.tiles = MapParser.getTilesFromFile(mapName);
         this.background = MapParser.getBackground(mapName);
         this.background.setSize(SuperSmashShoot.SCREEN_WIDTH, SuperSmashShoot.SCREEN_HEIGHT);
 
+        this.timeToStart = 10;
+        this.countDownFont = new BitmapFont(Gdx.files.internal(DataManager.font));
+        this.countDownFont.getData().setScale(2f);
+        this.countDownFont.setColor(Color.BLACK);
+        this.fontInfo = new GlyphLayout();
+        this.fontInfo.setText(this.countDownFont, "5");
+
+        this.mapBorders = new MapBorders();
+
         if(CharacterSelection.chosenCharacter == IDs.CharacterType.SOLDIER)
             this.player = new Soldier(new Vector2(512, 256), CharacterSelection.skin);
         else if(CharacterSelection.chosenCharacter == IDs.CharacterType.KNIGHT)
-            System.err.println("Knight not implemented yet");
+            this.player = new Knight(new Vector2(512, 256), CharacterSelection.skin);
         else if(CharacterSelection.chosenCharacter == IDs.CharacterType.CLOWN)
-            System.err.println("Clown not implemented yet");
+            this.player = new Clown(new Vector2(512, 256), CharacterSelection.skin);
         else if(CharacterSelection.chosenCharacter == IDs.CharacterType.PIRATE)
-            System.err.println("Pirate not implemented yet");
+            this.player = new Pirate(new Vector2(512, 256), CharacterSelection.skin);
 
         for(int i = 0; i < SuperSmashShoot.serverListener.pdpList.size(); i ++) {
             for(PlayerDataPackage pdp : SuperSmashShoot.serverListener.pdpList){
@@ -87,7 +119,9 @@ public class Map implements Screen {
         /**-------------------------    INPUT       -------------------------**/
         this.player.jump();
         this.player.move();
-        this.player.shoot(Map.bullets);
+
+        if(this.timeToStart <= 0)
+            this.player.shoot(Map.bullets);
 
         this.player.applyPhysics();
         this.player.applyCollisions(this.tiles);
@@ -106,6 +140,9 @@ public class Map implements Screen {
             for (GhostPlayer gp : Map.ghostPlayers)
                 b.interact(gp);
         }
+
+        this.mapBorders.interactWithBullets(Map.bullets);
+        this.mapBorders.interactWithPlayer(this.player);
 
         /**-------------------------    UPDATE      -------------------------**/
 
@@ -150,6 +187,12 @@ public class Map implements Screen {
         if(Map.showFps)
             this.fps.render(this.game.batch);
 
+        if(this.timeToStart >= 0) {
+            this.countDownFont.draw(this.game.batch, String.valueOf((int) this.timeToStart), SuperSmashShoot.SCREEN_WIDTH / 2f - this.fontInfo.width / 2f,
+                    SuperSmashShoot.SCREEN_HEIGHT / 2f);
+            this.timeToStart -= Gdx.graphics.getDeltaTime();
+        }
+
         this.game.batch.end();
 
         /**-------------------------    DEBUGGING       --------------------------**/
@@ -175,6 +218,7 @@ public class Map implements Screen {
         this.destroyBullets();
     }
 
+
     private void updateGhostBullets(){
         List<BulletDataPackage> bdpCopy = new ArrayList<>(ServerListener.bdpList);
         for(BulletDataPackage bdp : bdpCopy){
@@ -195,6 +239,9 @@ public class Map implements Screen {
                     this.ghostBullets.add(new GhostBullet(bdp.getCharacterType(), bdp.getPlayer(), bdp.getId(), bdp.getPosition()));
                 }
 
+                for (GhostBullet gb : toDestroy)
+                    gb.dispose();
+
                 this.ghostBullets.removeAll(toDestroy);
             }
         }
@@ -208,6 +255,10 @@ public class Map implements Screen {
                 toDestroy.add(b);
             }
         }
+
+        for (Bullet b : toDestroy)
+            b.dispose();
+
         Map.bullets.removeAll(toDestroy);
     }
 
@@ -250,5 +301,7 @@ public class Map implements Screen {
             gb.dispose();
 
         this.background.getTexture().dispose();
+        this.countDownFont.dispose();
+        this.music.dispose();
     }
 }

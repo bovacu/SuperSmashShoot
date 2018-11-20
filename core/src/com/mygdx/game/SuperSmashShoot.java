@@ -3,10 +3,12 @@ package com.mygdx.game;
 import characters.ServerListener;
 import characters.ServerSpeaker;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import general.Converter;
 import general.DataManager;
 import general.IDs;
 import screens.MainMenu;
@@ -39,6 +41,9 @@ public class SuperSmashShoot extends Game {
 
 	private final String HOST;
 
+	public static Sound mediaPlayer;
+	public static long mediaPLayerId;
+
 	public SuperSmashShoot(String host){
 		this.HOST = host;
 	}
@@ -64,6 +69,9 @@ public class SuperSmashShoot extends Game {
 		SuperSmashShoot.partyList = new PartyList(512, 512, new Vector2(SCREEN_WIDTH - 512 - 15,
                 SCREEN_HEIGHT / 2f - 256), IDs.PAGED_LIST_BACK);
 
+		SuperSmashShoot.mediaPlayer = Converter.idToSound(IDs.MENU_MUSIC);
+        SuperSmashShoot.mediaPLayerId = SuperSmashShoot.mediaPlayer.loop(DataManager.music / 100f);
+
         this.mainMenu = new MainMenu(this);
 		super.setScreen(this.mainMenu);
 	}
@@ -81,6 +89,7 @@ public class SuperSmashShoot extends Game {
 		ms_message.dispose();
 		SuperSmashShoot.partyList.dispose();
 		this.disconnectFromDataBase();
+		SuperSmashShoot.mediaPlayer.dispose();
 	}
 
 	private void disconnectFromDataBase(){

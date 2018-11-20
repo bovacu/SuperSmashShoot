@@ -1,6 +1,6 @@
 package tiles;
 
-import characters.Player;
+import characters.players.Player;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;

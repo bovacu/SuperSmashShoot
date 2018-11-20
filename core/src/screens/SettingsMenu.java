@@ -268,6 +268,7 @@ public class SettingsMenu extends InputAdapter implements Screen {
                 DataManager.writeData();
                 SuperSmashShoot.ms_message.setTextColor(Color.valueOf(DataManager.colorToHex(DataManager.textColor)));
                 SuperSmashShoot.partyList.updateColors();
+                SuperSmashShoot.mediaPlayer.setVolume(SuperSmashShoot.mediaPLayerId, DataManager.music / 100f);
             }
         };
         this.sb_apply.setPosition(new Vector2(SuperSmashShoot.SCREEN_WIDTH - this.sb_apply.getWidth() - offset,

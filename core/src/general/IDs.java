@@ -89,7 +89,8 @@ public class IDs {
     public static final int GUN_BULLET                  = 100;
     public static final int GUN_BULLET_DESTROYED        = 101;
     public static final int HAMMER                      = 102;
-    public static final int AXE                         = 103;
+    public static final int HAMMER_DESTROYED            = 103;
+    public static final int AXE                         = 104;
 
     /**---------- UI ---------------**/
 
@@ -333,6 +334,7 @@ public class IDs {
     public static final int CM_SKY_DOWN                 = 373;
 
     public static final int GUN                         = 400;
+    public static final int PISTOL                      = 401;
 
     public static final int HEALTH_BAR_1                = 430;
     public static final int HEALTH_BAR_2                = 431;
@@ -340,6 +342,13 @@ public class IDs {
     public static final int HEALTH_BAR_4                = 433;
     public static final int HEALTH_BAR_5                = 434;
     public static final int HEALTH_BAR_6                = 435;
+
+    public static final int MENU_MUSIC                  = 436;
+    public static final int CITY_MUSIC                  = 437;
+    public static final int SKY_MUSIC                   = 438;
+    public static final int SHOT_EFFECT                 = 439;
+    public static final int THROW_EFFECT                = 440;
+    public static final int PISTOL_EFFECT               = 441;
 
     public static final int DEFAULT                     = 1000;
 

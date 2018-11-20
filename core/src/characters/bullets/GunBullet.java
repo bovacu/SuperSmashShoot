@@ -1,8 +1,8 @@
 package characters.bullets;
 
-import characters.AnimationController;
-import characters.GhostPlayer;
-import characters.Player;
+import characters.controllers.AnimationController;
+import characters.players.GhostPlayer;
+import characters.players.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
